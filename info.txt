@@ -18,3 +18,57 @@ bx pr load-helm-chart --archive ibm-ucd-prod-2.0.0.tgz --clustername dc1cp01.icp
 // 6.2.7
 cd /root/Downloads/ucd_6.2.7/charts
 bx pr load-helm-chart --archive ibm-ucd-prod-1.0.0.974499.tgz --clustername dc1cp01.icp
+
+
+===============================
+
+var exit = properties.get('exitCode');
+
+commandOut.println("exit = " + exit);
+
+if (exit == 0) {
+    properties.put('Status', 'Success');
+    commandOut.println("exit == 0");
+    
+    scanner.register("STATUS: DEPLOYED", function(lineNumber, line) {
+          var value = line.replace("STATUS: ", "");
+          properties.put("Value", value);
+          passed = 1;
+      });
+         
+    scanner.scan();
+    
+    var currentValue = properties.get('Value');
+    commandOut.println("currentValue = " + currentValue);
+
+}
+else {
+    properties.put('Status', 'Failure');
+    commandOut.println("else ...");
+    var passed = 0;
+    commandOut.println("initial passed = " + passed);
+
+    scanner.register("STATUS: DEPLOYED", function(lineNumber, line) {
+          var value = line.replace("STATUS: ", "");
+          properties.put("Value", value);
+          passed = 1;
+      });
+         
+    scanner.scan();
+
+    var currentValue = properties.get('Value');
+    commandOut.println("currentValue = " + currentValue);
+
+
+    if(passed == 1) {
+        commandOut.println("passed is 1. found keyword. Override Failure and set status to Success !!!");
+        properties.put('Status', 'Success');
+    } else {
+        commandOut.println("passed is not 1 -> keyword not found. Failure.");
+    }
+}
+
+commandOut.println("Final step status = " + properties.get('Status'));
+
+
+=================================
