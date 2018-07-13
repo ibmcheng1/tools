@@ -1,0 +1,2126 @@
+{
+    "name": "jenkinstest",
+    "description": "",
+    "enforceCompleteSnapshots": false,
+    "propSheet": {"properties": []},
+    "templatePropSheet": {
+        "name": "template",
+        "properties": []
+    },
+    "components": [{
+        "name": "JenkinsTest",
+        "description": "Created from Jekins",
+        "created": 1531159073633,
+        "componentType": "STANDARD",
+        "ignoreQualifiers": 0,
+        "importAutomatically": false,
+        "useVfs": true,
+        "active": true,
+        "deleted": false,
+        "defaultVersionType": "FULL",
+        "cleanupDaysToKeep": 0,
+        "cleanupCountToKeep": 0,
+        "componentTemplate": {
+            "securityResourceId": "164802f5-2d1c-f320-a92a-7e27d03e775b",
+            "path": "componentTemplates\/164802f5-2d4c-031f-94d2-112d48a7d34c",
+            "name": "HelmChartTemplate",
+            "description": "",
+            "ignoreQualifiers": 0,
+            "componentType": "STANDARD",
+            "tags": [],
+            "active": true,
+            "envPropDefs": [],
+            "resPropDefs": [],
+            "propDefs": [
+                {
+                    "name": "jenkins.server",
+                    "label": "jenkins.server",
+                    "pattern": "",
+                    "type": "TEXT",
+                    "required": false,
+                    "description": "",
+                    "placeholder": ""
+                },
+                {
+                    "name": "jenkins.reviewed",
+                    "label": "jenkins.reviewed",
+                    "pattern": "",
+                    "type": "TEXT",
+                    "required": false,
+                    "description": "",
+                    "placeholder": ""
+                }
+            ],
+            "properties": [
+                {
+                    "name": "jenkins.reviewed",
+                    "description": "",
+                    "secure": false
+                },
+                {
+                    "name": "jenkins.server",
+                    "description": "",
+                    "secure": false
+                }
+            ],
+            "processes": [
+                {
+                    "name": "Deploy Helm Chart",
+                    "description": "",
+                    "defaultWorkingDir": "${p:resource\/work.dir}\/${p:component.name}",
+                    "takesVersion": true,
+                    "inventoryActionType": "ADD",
+                    "status": "Active",
+                    "configActionType": "ADD",
+                    "active": true,
+                    "path": "componentTemplates\/164802f5-2d4c-031f-94d2-112d48a7d34c\/processes\/1648ac94-bde7-c3c3-b3a5-460ed70242d2",
+                    "deleted": false,
+                    "propDefs": [],
+                    "rootActivity": {
+                        "edges": [
+                            {
+                                "to": "Replace Tokens",
+                                "from": "Download Artifacts",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "d9f33966df5b6f03e8f84fef79bf0a",
+                                "from": "Helm Custom Upgrade",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Get Environment Properties",
+                                "from": "Replace Tokens",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "First Error Handling",
+                                "from": "Helm Upgrade",
+                                "type": "FAILURE",
+                                "value": ""
+                            },
+                            {
+                                "to": "d9f33966df5b6f03e8f84fef79bf0a",
+                                "from": "Helm Upgrade",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Download Artifacts",
+                                "from": "Clean Working Directory",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Helm Upgrade",
+                                "from": "Check status before",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Check status before",
+                                "from": "Helm Init",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Helm Init",
+                                "from": "ICP Login",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "ICP Login",
+                                "from": "Use Context",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Helm Custom Upgrade",
+                                "from": "First Error Handling",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Clean Working Directory",
+                                "type": "ALWAYS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Use Context",
+                                "from": "Get Environment Properties",
+                                "type": "SUCCESS",
+                                "value": ""
+                            }
+                        ],
+                        "offsets": [
+                            {
+                                "name": "Clean Working Directory",
+                                "x": -90,
+                                "y": 140,
+                                "h": 80,
+                                "w": 380
+                            },
+                            {
+                                "name": "Helm Upgrade",
+                                "x": 455.0000000000001,
+                                "y": 830,
+                                "h": 80,
+                                "w": 270
+                            },
+                            {
+                                "name": "ICP Login",
+                                "x": 205.00000000000006,
+                                "y": 650,
+                                "h": 80,
+                                "w": 180
+                            },
+                            {
+                                "name": "Use Context",
+                                "x": -119.99999999999989,
+                                "y": 670,
+                                "h": 80,
+                                "w": 250
+                            },
+                            {
+                                "name": "Check status before",
+                                "x": 60.000000000000114,
+                                "y": 830,
+                                "h": 80,
+                                "w": 260
+                            },
+                            {
+                                "name": "Helm Custom Upgrade",
+                                "x": 320.0000000000001,
+                                "y": 1150,
+                                "h": 80,
+                                "w": 280
+                            },
+                            {
+                                "name": "d9f33966df5b6f03e8f84fef79bf0a",
+                                "x": 755.0000000000001,
+                                "y": 1160,
+                                "h": 90,
+                                "w": 130
+                            },
+                            {
+                                "name": "Helm Init",
+                                "x": -289.9999999999999,
+                                "y": 830,
+                                "h": 80,
+                                "w": 230
+                            },
+                            {
+                                "name": "Replace Tokens",
+                                "x": -69.99999999999994,
+                                "y": 420,
+                                "h": 80,
+                                "w": 280
+                            },
+                            {
+                                "name": "Download Artifacts",
+                                "x": -59.999999999999886,
+                                "y": 280,
+                                "h": 80,
+                                "w": 300
+                            },
+                            {
+                                "name": "First Error Handling",
+                                "x": 330.0000000000001,
+                                "y": 980,
+                                "h": 80,
+                                "w": 250
+                            },
+                            {
+                                "name": "Get Environment Properties",
+                                "x": -119.99999999999989,
+                                "y": 540,
+                                "h": 80,
+                                "w": 380
+                            }
+                        ],
+                        "layoutMode": "manual",
+                        "type": "graph",
+                        "name": "4b84de17-03cf-4f7f-9972-d4404a75d464",
+                        "children": [
+                            {
+                                "type": "finish",
+                                "name": "d9f33966df5b6f03e8f84fef79bf0a",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 65,
+                                "commandName": "Delete Files and Directories",
+                                "pluginName": "File Utils",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "baseDir": ".",
+                                    "includes": "**\/*\r\n*",
+                                    "excludes": "",
+                                    "followSymlinks": "false",
+                                    "caseSensitive": "true"
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Clean Working Directory",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 30,
+                                "commandName": "Download Artifacts",
+                                "pluginName": "UrbanCode Deploy Versioned File Storage",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "directoryOffset": "\/helm_chart",
+                                    "artifactSetBaseDir": "",
+                                    "fileIncludePatterns": "**\/*",
+                                    "fileExcludePatterns": "",
+                                    "syncMode": "true",
+                                    "fullVerification": "true",
+                                    "setFileExecuteBits": "false",
+                                    "verifyFileIntegrity": "false",
+                                    "versionId": "${p:version.id}",
+                                    "serverUrl": "${p:server.url}",
+                                    "compId": "${p:component.id}",
+                                    "resId": "${p:resource.id}",
+                                    "charset": "",
+                                    "label": ""
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Download Artifacts",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 65,
+                                "commandName": "Replace Tokens",
+                                "pluginName": "File Utils",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "includes": "**\/*",
+                                    "excludes": "",
+                                    "envPropValues": "${p:environment\/allProperties},${p:component\/allProperties},${p:resource\/allProperties},${p:environment\/allProperties}",
+                                    "propertyPrefix": "",
+                                    "explicitTokens": "",
+                                    "startDelimiter": "@@@",
+                                    "endDelimiter": "@@@",
+                                    "propFile": "replace_tokens.properties",
+                                    "dir": "",
+                                    "customEncoding": ""
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Replace Tokens",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 78,
+                                "commandName": "Get Environment Properties",
+                                "pluginName": "UrbanCode Deploy Environments",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "application": "${p:application.name}",
+                                    "environment": "${p:environment.name}"
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Get Environment Properties",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": true,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 15,
+                                "commandName": "Use Context",
+                                "pluginName": "Kubernetes",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "url": "",
+                                    "username": "",
+                                    "password": "crypt_v1{AES\/CBC\/PKCS5Padding|aes128keyabk8|s7irNMer1iOxT\/\/r4vWYzg==|Ww9tXnKXU49DsT1kFKP8LA==}",
+                                    "namespace": "",
+                                    "path": "",
+                                    "globals": "--kubeconfig=${p:Get Environment Properties\/kubeconfig}",
+                                    "contextname": "${p:kube.context}"
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Use Context",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": true,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 15,
+                                "commandName": "Helm Init",
+                                "pluginName": "Kubernetes",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "cluster": "",
+                                    "flags": "--client-only",
+                                    "path": "",
+                                    "kubeconfig": "${p:Get Environment Properties\/kubeconfig}"
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Helm Init",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": true,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 15,
+                                "commandName": "Helm Upgrade",
+                                "pluginName": "Kubernetes",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "release": "${p:helm.release}",
+                                    "chart": ".\/helm_chart",
+                                    "flags": "--namespace\r\n${p:icp.namespace}\r\n--install\r\n--wait\r\n--timeout\r\n30\r\n--tls\r\n--debug",
+                                    "path": "",
+                                    "kubeconfig": "${p:Get Environment Properties\/kubeconfig}"
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Helm Upgrade",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 9,
+                                "commandName": "Shell",
+                                "pluginName": "Shell",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "directoryOffset": ".",
+                                    "shellInterpreter": "",
+                                    "scriptBody": "echo \"1\" | bx pr login -u admin -p admin --skip-ssl-validation",
+                                    "runAsDaemon": "false",
+                                    "outputFile": ""
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "ICP Login",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "postProcessingScript": {
+                                    "id": "164856a1-dcae-1843-7736-a0c78da2c99f",
+                                    "name": "Helm_Upgrade_Post_Check",
+                                    "description": "",
+                                    "body": "var exit = properties.get('exitCode');\r\n\r\ncommandOut.println(\"initial step exitCode = \" + exit);\r\n\r\nvar passed = 0;\r\ncommandOut.println(\"initial passed = \" + passed);\r\n\r\nscanner.register(\"STATUS: DEPLOYED\", function(lineNumber, line) {\r\n      var value = line.replace(\"STATUS: \", \"\");\r\n      properties.put(\"Value\", value);\r\n      passed = 1;\r\n  });\r\n  \r\nscanner.scan();\r\n\r\nvar currentValue = properties.get('Value');\r\ncommandOut.println(\"STATUS = \" + currentValue);\r\ncommandOut.println(\"Determined passed = \" + passed);\r\n\r\nif (passed == 1) {\r\n    commandOut.println(\"passed is 1. found keyword. Override Failure and set status to Success !!!\");\r\n    properties.put('Status', 'Success');\r\n} else {\r\n    commandOut.println(\"passed is not 1 -> keyword not found. Failure.\");\r\n    properties.put('Status', 'Failure');\r\n}\r\n\r\ncommandOut.println(\"Final step status = \" + properties.get('Status'));\r\n"
+                                },
+                                "pluginVersion": 9,
+                                "commandName": "Shell",
+                                "pluginName": "Shell",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "directoryOffset": ".",
+                                    "shellInterpreter": "",
+                                    "scriptBody": "helm upgrade ${p:helm.release} .\/helm_chart --namespace ${p:icp.namespace} --install --wait --timeout 30 --tls --debug",
+                                    "runAsDaemon": "false",
+                                    "outputFile": ""
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Helm Custom Upgrade",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 9,
+                                "commandName": "Shell",
+                                "pluginName": "Shell",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "directoryOffset": ".",
+                                    "shellInterpreter": "",
+                                    "scriptBody": "echo \"Error handling: namespace = ${p:icp.namespace} ,  release name = ${p:helm.release}\"\n\nhelm ls --deployed --namespace ${p:icp.namespace} --tls | awk '\/${p:helm.release}\/ {print \"Counter: \" $2}'",
+                                    "runAsDaemon": "false",
+                                    "outputFile": ""
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "First Error Handling",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "postProcessingScript": {
+                                    "id": "1648aa12-1407-a32e-2332-03942a18d352",
+                                    "name": "Post Check Status Before",
+                                    "description": "",
+                                    "body": "properties.put('Status', 'Success');\n\nvar exit = properties.get('exitCode');\ncommandOut.println(\"initial step exitCode = \" + exit);\n\nvar passed = 0;\ncommandOut.println(\"initial passed = \" + passed);\n\nscanner.register(\"Counter: \", function(lineNumber, line) {\n      var value = line.replace(\"Counter: \", \"\");\n      properties.put('Counter', value);\n      passed = 1;\n  });\n  \nscanner.scan();\n\nvar currentValue = properties.get('Counter');\n\ncommandOut.println(\"Counter = \" + currentValue);\ncommandOut.println(\"Determined passed = \" + passed);\n\ncommandOut.println(\"Final step status = \" + properties.get('Status'));\n"
+                                },
+                                "pluginVersion": 9,
+                                "commandName": "Shell",
+                                "pluginName": "Shell",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "directoryOffset": ".",
+                                    "shellInterpreter": "",
+                                    "scriptBody": "echo \"Check release status: namespace = ${p:icp.namespace} ,  release name = ${p:helm.release}\"\n\nhelm ls --deployed --namespace ${p:icp.namespace} --tls | awk '\/${p:helm.release}\/ {print \"Counter: \" $2}'",
+                                    "runAsDaemon": "false",
+                                    "outputFile": ""
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Check status before",
+                                "children": []
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "Deploy Helm Chart - backup v1.0",
+                    "description": "",
+                    "defaultWorkingDir": "${p:resource\/work.dir}\/${p:component.name}",
+                    "takesVersion": true,
+                    "inventoryActionType": "ADD",
+                    "status": "Active",
+                    "configActionType": "ADD",
+                    "active": true,
+                    "path": "componentTemplates\/164802f5-2d4c-031f-94d2-112d48a7d34c\/processes\/1648ac9a-e480-3dde-9bfd-e2730a73dbab",
+                    "deleted": false,
+                    "propDefs": [],
+                    "rootActivity": {
+                        "edges": [
+                            {
+                                "to": "Use Context",
+                                "from": "Get Environment Properties",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Shell",
+                                "from": "Use Context",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Replace Tokens",
+                                "from": "Download Artifacts",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Clean Working Directory",
+                                "type": "ALWAYS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Download Artifacts",
+                                "from": "Clean Working Directory",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "d9f33966df5b6f03e8f84fef79bf0a",
+                                "from": "Helm Upgrade",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Get Environment Properties",
+                                "from": "Replace Tokens",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Helm Init",
+                                "from": "Shell",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Helm Upgrade",
+                                "from": "Helm Init",
+                                "type": "SUCCESS",
+                                "value": ""
+                            }
+                        ],
+                        "offsets": [
+                            {
+                                "name": "Replace Tokens",
+                                "x": -69.99999999999994,
+                                "y": 420,
+                                "h": 80,
+                                "w": 280
+                            },
+                            {
+                                "name": "Clean Working Directory",
+                                "x": -90,
+                                "y": 140,
+                                "h": 80,
+                                "w": 380
+                            },
+                            {
+                                "name": "Get Environment Properties",
+                                "x": -109.99999999999994,
+                                "y": 580,
+                                "h": 80,
+                                "w": 380
+                            },
+                            {
+                                "name": "Use Context",
+                                "x": -40.000000000000114,
+                                "y": 730,
+                                "h": 80,
+                                "w": 250
+                            },
+                            {
+                                "name": "Helm Init",
+                                "x": -30.00000000000017,
+                                "y": 1080,
+                                "h": 80,
+                                "w": 230
+                            },
+                            {
+                                "name": "d9f33966df5b6f03e8f84fef79bf0a",
+                                "x": 26.87355967741948,
+                                "y": 1410,
+                                "h": 90,
+                                "w": 130
+                            },
+                            {
+                                "name": "Download Artifacts",
+                                "x": -59.999999999999886,
+                                "y": 280,
+                                "h": 80,
+                                "w": 300
+                            },
+                            {
+                                "name": "Shell",
+                                "x": -9.999999999999886,
+                                "y": 887.154761904762,
+                                "h": 80,
+                                "w": 180
+                            },
+                            {
+                                "name": "Helm Upgrade",
+                                "x": -50.00000000000015,
+                                "y": 1250,
+                                "h": 80,
+                                "w": 270
+                            }
+                        ],
+                        "layoutMode": "manual",
+                        "type": "graph",
+                        "name": "5adec20d-a3c2-4e62-816a-fda2cecbd3c8",
+                        "children": [
+                            {
+                                "type": "finish",
+                                "name": "d9f33966df5b6f03e8f84fef79bf0a",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 65,
+                                "commandName": "Delete Files and Directories",
+                                "pluginName": "File Utils",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "baseDir": ".",
+                                    "includes": "**\/*\r\n*",
+                                    "excludes": "",
+                                    "followSymlinks": "false",
+                                    "caseSensitive": "true"
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Clean Working Directory",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 30,
+                                "commandName": "Download Artifacts",
+                                "pluginName": "UrbanCode Deploy Versioned File Storage",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "directoryOffset": "\/helm_chart",
+                                    "artifactSetBaseDir": "",
+                                    "fileIncludePatterns": "**\/*",
+                                    "fileExcludePatterns": "",
+                                    "syncMode": "true",
+                                    "fullVerification": "true",
+                                    "setFileExecuteBits": "false",
+                                    "verifyFileIntegrity": "false",
+                                    "versionId": "${p:version.id}",
+                                    "serverUrl": "${p:server.url}",
+                                    "compId": "${p:component.id}",
+                                    "resId": "${p:resource.id}",
+                                    "charset": "",
+                                    "label": ""
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Download Artifacts",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 65,
+                                "commandName": "Replace Tokens",
+                                "pluginName": "File Utils",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "includes": "**\/*",
+                                    "excludes": "",
+                                    "envPropValues": "${p:environment\/allProperties},${p:component\/allProperties},${p:resource\/allProperties},${p:environment\/allProperties}",
+                                    "propertyPrefix": "",
+                                    "explicitTokens": "",
+                                    "startDelimiter": "@@@",
+                                    "endDelimiter": "@@@",
+                                    "propFile": "replace_tokens.properties",
+                                    "dir": "",
+                                    "customEncoding": ""
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Replace Tokens",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 78,
+                                "commandName": "Get Environment Properties",
+                                "pluginName": "UrbanCode Deploy Environments",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "application": "${p:application.name}",
+                                    "environment": "${p:environment.name}"
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Get Environment Properties",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": true,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 15,
+                                "commandName": "Use Context",
+                                "pluginName": "Kubernetes",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "url": "",
+                                    "username": "",
+                                    "password": "crypt_v1{AES\/CBC\/PKCS5Padding|aes128keyabk8|0U0Z6EHr3nQgU7sRWB\/h5w==|jyxwx4JG3i1lGyAOv5tT8Q==}",
+                                    "namespace": "",
+                                    "path": "",
+                                    "globals": "--kubeconfig=${p:Get Environment Properties\/kubeconfig}",
+                                    "contextname": "${p:kube.context}"
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Use Context",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": true,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 15,
+                                "commandName": "Helm Init",
+                                "pluginName": "Kubernetes",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "cluster": "",
+                                    "flags": "--client-only",
+                                    "path": "",
+                                    "kubeconfig": "${p:Get Environment Properties\/kubeconfig}"
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Helm Init",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": true,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 15,
+                                "commandName": "Helm Upgrade",
+                                "pluginName": "Kubernetes",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "release": "${p:helm.release}",
+                                    "chart": ".\/helm_chart",
+                                    "flags": "--namespace\r\n${p:icp.namespace}\r\n--install\r\n--wait\r\n--timeout\r\n30\r\n--tls\r\n--debug",
+                                    "path": "",
+                                    "kubeconfig": "${p:Get Environment Properties\/kubeconfig}"
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Helm Upgrade",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 9,
+                                "commandName": "Shell",
+                                "pluginName": "Shell",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "directoryOffset": ".",
+                                    "shellInterpreter": "",
+                                    "scriptBody": "echo \"1\" | bx pr login -u admin -p admin --skip-ssl-validation",
+                                    "runAsDaemon": "false",
+                                    "outputFile": ""
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Shell",
+                                "children": []
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "Deploy Helm Chart -backup",
+                    "description": "",
+                    "defaultWorkingDir": "${p:resource\/work.dir}\/${p:component.name}",
+                    "takesVersion": true,
+                    "inventoryActionType": "ADD",
+                    "status": "Active",
+                    "configActionType": "ADD",
+                    "active": true,
+                    "path": "componentTemplates\/164802f5-2d4c-031f-94d2-112d48a7d34c\/processes\/164802f5-2f44-7154-64b1-7a4ad54ef11e",
+                    "deleted": false,
+                    "propDefs": [],
+                    "rootActivity": {
+                        "edges": [
+                            {
+                                "to": "Use Context",
+                                "from": "Get Environment Properties",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Shell",
+                                "from": "Use Context",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Replace Tokens",
+                                "from": "Download Artifacts",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Clean Working Directory",
+                                "type": "ALWAYS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Download Artifacts",
+                                "from": "Clean Working Directory",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "d9f33966df5b6f03e8f84fef79bf0a",
+                                "from": "Helm Upgrade",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Get Environment Properties",
+                                "from": "Replace Tokens",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Helm Init",
+                                "from": "Shell",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Helm Upgrade",
+                                "from": "Helm Init",
+                                "type": "SUCCESS",
+                                "value": ""
+                            }
+                        ],
+                        "offsets": [
+                            {
+                                "name": "Replace Tokens",
+                                "x": -69.99999999999994,
+                                "y": 420,
+                                "h": 80,
+                                "w": 280
+                            },
+                            {
+                                "name": "Clean Working Directory",
+                                "x": -90,
+                                "y": 140,
+                                "h": 80,
+                                "w": 380
+                            },
+                            {
+                                "name": "Get Environment Properties",
+                                "x": -109.99999999999994,
+                                "y": 580,
+                                "h": 80,
+                                "w": 380
+                            },
+                            {
+                                "name": "Use Context",
+                                "x": -40.000000000000114,
+                                "y": 730,
+                                "h": 80,
+                                "w": 250
+                            },
+                            {
+                                "name": "Helm Init",
+                                "x": -30.00000000000017,
+                                "y": 1080,
+                                "h": 80,
+                                "w": 230
+                            },
+                            {
+                                "name": "d9f33966df5b6f03e8f84fef79bf0a",
+                                "x": 26.87355967741948,
+                                "y": 1410,
+                                "h": 90,
+                                "w": 130
+                            },
+                            {
+                                "name": "Download Artifacts",
+                                "x": -59.999999999999886,
+                                "y": 280,
+                                "h": 80,
+                                "w": 300
+                            },
+                            {
+                                "name": "Shell",
+                                "x": -9.999999999999886,
+                                "y": 887.154761904762,
+                                "h": 80,
+                                "w": 180
+                            },
+                            {
+                                "name": "Helm Upgrade",
+                                "x": -50.00000000000015,
+                                "y": 1250,
+                                "h": 80,
+                                "w": 270
+                            }
+                        ],
+                        "layoutMode": "manual",
+                        "type": "graph",
+                        "name": "5adec20d-a3c2-4e62-816a-fda2cecbd3c8",
+                        "children": [
+                            {
+                                "type": "finish",
+                                "name": "d9f33966df5b6f03e8f84fef79bf0a",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 65,
+                                "commandName": "Delete Files and Directories",
+                                "pluginName": "File Utils",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "baseDir": ".",
+                                    "includes": "**\/*\r\n*",
+                                    "excludes": "",
+                                    "followSymlinks": "false",
+                                    "caseSensitive": "true"
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Clean Working Directory",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 30,
+                                "commandName": "Download Artifacts",
+                                "pluginName": "UrbanCode Deploy Versioned File Storage",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "directoryOffset": "\/helm_chart",
+                                    "artifactSetBaseDir": "",
+                                    "fileIncludePatterns": "**\/*",
+                                    "fileExcludePatterns": "",
+                                    "syncMode": "true",
+                                    "fullVerification": "true",
+                                    "setFileExecuteBits": "false",
+                                    "verifyFileIntegrity": "false",
+                                    "versionId": "${p:version.id}",
+                                    "serverUrl": "${p:server.url}",
+                                    "compId": "${p:component.id}",
+                                    "resId": "${p:resource.id}",
+                                    "charset": "",
+                                    "label": ""
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Download Artifacts",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 65,
+                                "commandName": "Replace Tokens",
+                                "pluginName": "File Utils",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "includes": "**\/*",
+                                    "excludes": "",
+                                    "envPropValues": "${p:environment\/allProperties},${p:component\/allProperties},${p:resource\/allProperties},${p:environment\/allProperties}",
+                                    "propertyPrefix": "",
+                                    "explicitTokens": "",
+                                    "startDelimiter": "@@@",
+                                    "endDelimiter": "@@@",
+                                    "propFile": "replace_tokens.properties",
+                                    "dir": "",
+                                    "customEncoding": ""
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Replace Tokens",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 78,
+                                "commandName": "Get Environment Properties",
+                                "pluginName": "UrbanCode Deploy Environments",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "application": "${p:application.name}",
+                                    "environment": "${p:environment.name}"
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Get Environment Properties",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": true,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 15,
+                                "commandName": "Use Context",
+                                "pluginName": "Kubernetes",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "url": "",
+                                    "username": "",
+                                    "password": "crypt_v1{AES\/CBC\/PKCS5Padding|aes128keyabk8|TSPfWr7PJP\/Ibb0IKDZotA==|uYkRWDEXoF+hCKaElSoPlg==}",
+                                    "namespace": "",
+                                    "path": "",
+                                    "globals": "--kubeconfig=${p:Get Environment Properties\/kubeconfig}",
+                                    "contextname": "${p:kube.context}"
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Use Context",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": true,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 15,
+                                "commandName": "Helm Init",
+                                "pluginName": "Kubernetes",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "cluster": "",
+                                    "flags": "--client-only",
+                                    "path": "",
+                                    "kubeconfig": "${p:Get Environment Properties\/kubeconfig}"
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Helm Init",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": true,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 15,
+                                "commandName": "Helm Upgrade",
+                                "pluginName": "Kubernetes",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "release": "${p:helm.release}",
+                                    "chart": ".\/helm_chart",
+                                    "flags": "--namespace\r\n${p:icp.namespace}\r\n--install\r\n--wait\r\n--timeout\r\n30\r\n--tls\r\n--debug",
+                                    "path": "",
+                                    "kubeconfig": "${p:Get Environment Properties\/kubeconfig}"
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Helm Upgrade",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 9,
+                                "commandName": "Shell",
+                                "pluginName": "Shell",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "directoryOffset": ".",
+                                    "shellInterpreter": "",
+                                    "scriptBody": "echo \"1\" | bx pr login -u admin -p admin --skip-ssl-validation",
+                                    "runAsDaemon": "false",
+                                    "outputFile": ""
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Shell",
+                                "children": []
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "Deploy Test",
+                    "description": "continue working version",
+                    "defaultWorkingDir": "${p:resource\/work.dir}\/${p:component.name}",
+                    "takesVersion": true,
+                    "inventoryActionType": "ADD",
+                    "status": "Active",
+                    "configActionType": "ADD",
+                    "active": true,
+                    "path": "componentTemplates\/164802f5-2d4c-031f-94d2-112d48a7d34c\/processes\/1648a08d-0dbb-1749-62f4-1ff72453db92",
+                    "deleted": false,
+                    "propDefs": [],
+                    "rootActivity": {
+                        "edges": [
+                            {
+                                "to": "Replace Tokens",
+                                "from": "Download Artifacts",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "d9f33966df5b6f03e8f84fef79bf0a",
+                                "from": "Helm Custom Upgrade",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Get Environment Properties",
+                                "from": "Replace Tokens",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "First Error Handling",
+                                "from": "Helm Upgrade",
+                                "type": "FAILURE",
+                                "value": ""
+                            },
+                            {
+                                "to": "d9f33966df5b6f03e8f84fef79bf0a",
+                                "from": "Helm Upgrade",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Download Artifacts",
+                                "from": "Clean Working Directory",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Helm Upgrade",
+                                "from": "Check status before",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Check status before",
+                                "from": "Helm Init",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Helm Init",
+                                "from": "ICP Login",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "ICP Login",
+                                "from": "Use Context",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Helm Custom Upgrade",
+                                "from": "First Error Handling",
+                                "type": "SUCCESS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Clean Working Directory",
+                                "type": "ALWAYS",
+                                "value": ""
+                            },
+                            {
+                                "to": "Use Context",
+                                "from": "Get Environment Properties",
+                                "type": "SUCCESS",
+                                "value": ""
+                            }
+                        ],
+                        "offsets": [
+                            {
+                                "name": "Clean Working Directory",
+                                "x": -90,
+                                "y": 140,
+                                "h": 80,
+                                "w": 380
+                            },
+                            {
+                                "name": "Helm Upgrade",
+                                "x": 455.0000000000001,
+                                "y": 830,
+                                "h": 80,
+                                "w": 270
+                            },
+                            {
+                                "name": "ICP Login",
+                                "x": 205.00000000000006,
+                                "y": 650,
+                                "h": 80,
+                                "w": 180
+                            },
+                            {
+                                "name": "Use Context",
+                                "x": -119.99999999999989,
+                                "y": 670,
+                                "h": 80,
+                                "w": 250
+                            },
+                            {
+                                "name": "Check status before",
+                                "x": 60.000000000000114,
+                                "y": 830,
+                                "h": 80,
+                                "w": 260
+                            },
+                            {
+                                "name": "Helm Custom Upgrade",
+                                "x": 320.0000000000001,
+                                "y": 1150,
+                                "h": 80,
+                                "w": 280
+                            },
+                            {
+                                "name": "d9f33966df5b6f03e8f84fef79bf0a",
+                                "x": 755.0000000000001,
+                                "y": 1160,
+                                "h": 90,
+                                "w": 130
+                            },
+                            {
+                                "name": "Helm Init",
+                                "x": -289.9999999999999,
+                                "y": 830,
+                                "h": 80,
+                                "w": 230
+                            },
+                            {
+                                "name": "Replace Tokens",
+                                "x": -69.99999999999994,
+                                "y": 420,
+                                "h": 80,
+                                "w": 280
+                            },
+                            {
+                                "name": "Download Artifacts",
+                                "x": -59.999999999999886,
+                                "y": 280,
+                                "h": 80,
+                                "w": 300
+                            },
+                            {
+                                "name": "First Error Handling",
+                                "x": 330.0000000000001,
+                                "y": 980,
+                                "h": 80,
+                                "w": 250
+                            },
+                            {
+                                "name": "Get Environment Properties",
+                                "x": -119.99999999999989,
+                                "y": 540,
+                                "h": 80,
+                                "w": 380
+                            }
+                        ],
+                        "layoutMode": "manual",
+                        "type": "graph",
+                        "name": "4b84de17-03cf-4f7f-9972-d4404a75d464",
+                        "children": [
+                            {
+                                "type": "finish",
+                                "name": "d9f33966df5b6f03e8f84fef79bf0a",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 65,
+                                "commandName": "Delete Files and Directories",
+                                "pluginName": "File Utils",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "baseDir": ".",
+                                    "includes": "**\/*\r\n*",
+                                    "excludes": "",
+                                    "followSymlinks": "false",
+                                    "caseSensitive": "true"
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Clean Working Directory",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 30,
+                                "commandName": "Download Artifacts",
+                                "pluginName": "UrbanCode Deploy Versioned File Storage",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "directoryOffset": "\/helm_chart",
+                                    "artifactSetBaseDir": "",
+                                    "fileIncludePatterns": "**\/*",
+                                    "fileExcludePatterns": "",
+                                    "syncMode": "true",
+                                    "fullVerification": "true",
+                                    "setFileExecuteBits": "false",
+                                    "verifyFileIntegrity": "false",
+                                    "versionId": "${p:version.id}",
+                                    "serverUrl": "${p:server.url}",
+                                    "compId": "${p:component.id}",
+                                    "resId": "${p:resource.id}",
+                                    "charset": "",
+                                    "label": ""
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Download Artifacts",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 65,
+                                "commandName": "Replace Tokens",
+                                "pluginName": "File Utils",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "includes": "**\/*",
+                                    "excludes": "",
+                                    "envPropValues": "${p:environment\/allProperties},${p:component\/allProperties},${p:resource\/allProperties},${p:environment\/allProperties}",
+                                    "propertyPrefix": "",
+                                    "explicitTokens": "",
+                                    "startDelimiter": "@@@",
+                                    "endDelimiter": "@@@",
+                                    "propFile": "replace_tokens.properties",
+                                    "dir": "",
+                                    "customEncoding": ""
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Replace Tokens",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 78,
+                                "commandName": "Get Environment Properties",
+                                "pluginName": "UrbanCode Deploy Environments",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "application": "${p:application.name}",
+                                    "environment": "${p:environment.name}"
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Get Environment Properties",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": true,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 15,
+                                "commandName": "Use Context",
+                                "pluginName": "Kubernetes",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "url": "",
+                                    "username": "",
+                                    "password": "crypt_v1{AES\/CBC\/PKCS5Padding|aes128keyabk8|mlNj5w+2h3Pdv2htFP3Sng==|2y6U7NJAI\/c+DeCuE8pYJg==}",
+                                    "namespace": "",
+                                    "path": "",
+                                    "globals": "--kubeconfig=${p:Get Environment Properties\/kubeconfig}",
+                                    "contextname": "${p:kube.context}"
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Use Context",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": true,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 15,
+                                "commandName": "Helm Init",
+                                "pluginName": "Kubernetes",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "cluster": "",
+                                    "flags": "--client-only",
+                                    "path": "",
+                                    "kubeconfig": "${p:Get Environment Properties\/kubeconfig}"
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Helm Init",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": true,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 15,
+                                "commandName": "Helm Upgrade",
+                                "pluginName": "Kubernetes",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "release": "${p:helm.release}",
+                                    "chart": ".\/helm_chart",
+                                    "flags": "--namespace\r\n${p:icp.namespace}\r\n--install\r\n--wait\r\n--timeout\r\n30\r\n--tls\r\n--debug",
+                                    "path": "",
+                                    "kubeconfig": "${p:Get Environment Properties\/kubeconfig}"
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Helm Upgrade",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 9,
+                                "commandName": "Shell",
+                                "pluginName": "Shell",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "directoryOffset": ".",
+                                    "shellInterpreter": "",
+                                    "scriptBody": "echo \"1\" | bx pr login -u admin -p admin --skip-ssl-validation",
+                                    "runAsDaemon": "false",
+                                    "outputFile": ""
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "ICP Login",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "postProcessingScript": {
+                                    "id": "164856a1-dcae-1843-7736-a0c78da2c99f",
+                                    "name": "Helm_Upgrade_Post_Check",
+                                    "description": "",
+                                    "body": "var exit = properties.get('exitCode');\r\n\r\ncommandOut.println(\"initial step exitCode = \" + exit);\r\n\r\nvar passed = 0;\r\ncommandOut.println(\"initial passed = \" + passed);\r\n\r\nscanner.register(\"STATUS: DEPLOYED\", function(lineNumber, line) {\r\n      var value = line.replace(\"STATUS: \", \"\");\r\n      properties.put(\"Value\", value);\r\n      passed = 1;\r\n  });\r\n  \r\nscanner.scan();\r\n\r\nvar currentValue = properties.get('Value');\r\ncommandOut.println(\"STATUS = \" + currentValue);\r\ncommandOut.println(\"Determined passed = \" + passed);\r\n\r\nif (passed == 1) {\r\n    commandOut.println(\"passed is 1. found keyword. Override Failure and set status to Success !!!\");\r\n    properties.put('Status', 'Success');\r\n} else {\r\n    commandOut.println(\"passed is not 1 -> keyword not found. Failure.\");\r\n    properties.put('Status', 'Failure');\r\n}\r\n\r\ncommandOut.println(\"Final step status = \" + properties.get('Status'));\r\n"
+                                },
+                                "pluginVersion": 9,
+                                "commandName": "Shell",
+                                "pluginName": "Shell",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "directoryOffset": ".",
+                                    "shellInterpreter": "",
+                                    "scriptBody": "helm upgrade ${p:helm.release} .\/helm_chart --namespace ${p:icp.namespace} --install --wait --timeout 30 --tls --debug",
+                                    "runAsDaemon": "false",
+                                    "outputFile": ""
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Helm Custom Upgrade",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "pluginVersion": 9,
+                                "commandName": "Shell",
+                                "pluginName": "Shell",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "directoryOffset": ".",
+                                    "shellInterpreter": "",
+                                    "scriptBody": "echo \"Error handling: namespace = ${p:icp.namespace} ,  release name = ${p:helm.release}\"\n\nhelm ls --deployed --namespace ${p:icp.namespace} --tls | awk '\/${p:helm.release}\/ {print \"Counter: \" $2}'",
+                                    "runAsDaemon": "false",
+                                    "outputFile": ""
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "First Error Handling",
+                                "children": []
+                            },
+                            {
+                                "allowFailure": false,
+                                "useImpersonation": false,
+                                "showHidden": false,
+                                "impersonationUseSudo": false,
+                                "postProcessingScript": {
+                                    "id": "1648aa12-1407-a32e-2332-03942a18d352",
+                                    "name": "Post Check Status Before",
+                                    "description": "",
+                                    "body": "properties.put('Status', 'Success');\n\nvar exit = properties.get('exitCode');\ncommandOut.println(\"initial step exitCode = \" + exit);\n\nvar passed = 0;\ncommandOut.println(\"initial passed = \" + passed);\n\nscanner.register(\"Counter: \", function(lineNumber, line) {\n      var value = line.replace(\"Counter: \", \"\");\n      properties.put('Counter', value);\n      passed = 1;\n  });\n  \nscanner.scan();\n\nvar currentValue = properties.get('Counter');\n\ncommandOut.println(\"Counter = \" + currentValue);\ncommandOut.println(\"Determined passed = \" + passed);\n\ncommandOut.println(\"Final step status = \" + properties.get('Status'));\n"
+                                },
+                                "pluginVersion": 9,
+                                "commandName": "Shell",
+                                "pluginName": "Shell",
+                                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                                "properties": {
+                                    "directoryOffset": ".",
+                                    "shellInterpreter": "",
+                                    "scriptBody": "echo \"Check release status: namespace = ${p:icp.namespace} ,  release name = ${p:helm.release}\"\n\nhelm ls --deployed --namespace ${p:icp.namespace} --tls | awk '\/${p:helm.release}\/ {print \"Counter: \" $2}'",
+                                    "runAsDaemon": "false",
+                                    "outputFile": ""
+                                },
+                                "cachedAuthTokenRestriction": {
+                                    "name": "System Default",
+                                    "description": "Used by default for any plugin steps without a specified token restriction",
+                                    "restrictions": [{
+                                        "verb": "ALL",
+                                        "url": "\/*"
+                                    }]
+                                },
+                                "type": "plugin",
+                                "name": "Check status before",
+                                "children": []
+                            }
+                        ]
+                    }
+                }
+            ],
+            "genericProcesses": [],
+            "teamMappings": []
+        },
+        "envPropDefs": [],
+        "resPropDefs": [],
+        "versionPropDefs": [{
+            "name": "jenkins.server",
+            "label": "jenkins.server",
+            "pattern": "",
+            "type": "TEXT",
+            "required": false,
+            "description": "",
+            "placeholder": ""
+        }],
+        "propSheetGroup": {"propSheets": [
+            {
+                "name": "custom",
+                "properties": []
+            },
+            {
+                "name": "template",
+                "properties": [
+                    {
+                        "name": "jenkins.reviewed",
+                        "description": "",
+                        "secure": false
+                    },
+                    {
+                        "name": "jenkins.server",
+                        "description": "",
+                        "secure": false
+                    }
+                ]
+            }
+        ]},
+        "processes": [],
+        "configTemplates": [],
+        "genericProcesses": [],
+        "teamMappings": [],
+        "tags": []
+    }],
+    "environments": [
+        {
+            "name": "ICP-DEV-POC",
+            "description": "",
+            "color": "#00B2EF",
+            "requireApprovals": false,
+            "noSelfApprovals": false,
+            "exemptProcesses": [],
+            "lockSnapshots": false,
+            "requireSnapshots": false,
+            "cleanupDaysToKeep": 0,
+            "cleanupCountToKeep": 0,
+            "enableProcessHistoryCleanup": true,
+            "useSystemDefaultDays": true,
+            "historyCleanupDaysToKeep": 365,
+            "order": 0,
+            "active": true,
+            "propSheet": {"properties": [
+                {
+                    "name": "hello.name",
+                    "value": "${p:environment.name}",
+                    "description": "",
+                    "secure": false
+                },
+                {
+                    "name": "helm.release",
+                    "value": "jenkinstest-dev",
+                    "description": "",
+                    "secure": false
+                },
+                {
+                    "name": "icp.namespace",
+                    "value": "development",
+                    "description": "",
+                    "secure": false
+                },
+                {
+                    "name": "kube.context",
+                    "value": "test.dc1-cp01.local-context",
+                    "description": "",
+                    "secure": false
+                },
+                {
+                    "name": "kubeconfig",
+                    "value": "\/root\/.kube\/config",
+                    "description": "",
+                    "secure": false
+                }
+            ]},
+            "templatePropSheet": {
+                "name": "template",
+                "properties": []
+            },
+            "baseResources": [{
+                "path": "\/jenkinstest\/ICP-DEV-POC",
+                "id": "16480604-0185-e6a7-aad9-6395a881c818"
+            }],
+            "componentPropSheets": [{
+                "properties": [],
+                "componentName": "JenkinsTest"
+            }],
+            "versionConditions": [],
+            "teamMappings": []
+        },
+        {
+            "name": "ICP-SYST-POC",
+            "description": "",
+            "color": "#B8461B",
+            "requireApprovals": false,
+            "noSelfApprovals": false,
+            "exemptProcesses": [],
+            "lockSnapshots": false,
+            "requireSnapshots": false,
+            "cleanupDaysToKeep": 0,
+            "cleanupCountToKeep": 0,
+            "enableProcessHistoryCleanup": true,
+            "useSystemDefaultDays": true,
+            "historyCleanupDaysToKeep": 365,
+            "order": 1,
+            "active": true,
+            "propSheet": {"properties": [
+                {
+                    "name": "hello.name",
+                    "value": "${p:environment.name}",
+                    "description": "",
+                    "secure": false
+                },
+                {
+                    "name": "helm.release",
+                    "value": "jenkinstest-system",
+                    "description": "",
+                    "secure": false
+                },
+                {
+                    "name": "icp.namespace",
+                    "value": "systemtest",
+                    "description": "",
+                    "secure": false
+                },
+                {
+                    "name": "kube.context",
+                    "value": "test.dc1-cp01.local-context",
+                    "description": "",
+                    "secure": false
+                },
+                {
+                    "name": "kubeconfig",
+                    "value": "\/root\/.kube\/config",
+                    "description": "",
+                    "secure": false
+                }
+            ]},
+            "templatePropSheet": {
+                "name": "template",
+                "properties": []
+            },
+            "baseResources": [{
+                "path": "\/jenkinstest\/ICP-SYST-POC",
+                "id": "1648ae88-62f7-5189-8d0a-420ca67f089d"
+            }],
+            "componentPropSheets": [{
+                "properties": [],
+                "componentName": "JenkinsTest"
+            }],
+            "versionConditions": [],
+            "teamMappings": []
+        }
+    ],
+    "statuses": [],
+    "processes": [{
+        "name": "Deploy",
+        "description": "",
+        "inventoryManagementType": "AUTOMATIC",
+        "offlineAgentHandling": "PRE_EXECUTION_CHECK",
+        "rootActivity": {
+            "edges": [
+                {
+                    "to": "6e338ce865ee8612382ebe7eedadd8",
+                    "type": "ALWAYS",
+                    "value": ""
+                },
+                {
+                    "to": "254dea9fa6c83b52dc690994cb6aa7",
+                    "from": "6e338ce865ee8612382ebe7eedadd8",
+                    "type": "SUCCESS",
+                    "value": ""
+                }
+            ],
+            "offsets": [
+                {
+                    "name": "6e338ce865ee8612382ebe7eedadd8",
+                    "x": -90,
+                    "y": 209,
+                    "h": 80,
+                    "w": 280
+                },
+                {
+                    "name": "254dea9fa6c83b52dc690994cb6aa7",
+                    "x": -5,
+                    "y": 420,
+                    "h": 80,
+                    "w": 120
+                }
+            ],
+            "layoutMode": "manual",
+            "type": "graph",
+            "name": "8035c835-8107-48be-96d6-6edc70a2d140",
+            "children": [
+                {
+                    "type": "finish",
+                    "name": "254dea9fa6c83b52dc690994cb6aa7",
+                    "children": []
+                },
+                {
+                    "componentName": "JenkinsTest",
+                    "properties": [
+                        {
+                            "name": "maxIteration",
+                            "value": "-1"
+                        },
+                        {
+                            "name": "failFast",
+                            "value": "false"
+                        }
+                    ],
+                    "type": "componentEnvironmentIterator",
+                    "name": "6e338ce865ee8612382ebe7eedadd8",
+                    "children": [{
+                        "componentName": "JenkinsTest",
+                        "status": "Active",
+                        "type": "inventoryVersionDiff",
+                        "name": "42323712-36fa-4c13-b46c-17f2c692bf95",
+                        "children": [{
+                            "componentProcessName": "Deploy Helm Chart",
+                            "componentName": "JenkinsTest",
+                            "allowFailure": false,
+                            "properties": {},
+                            "type": "componentProcess",
+                            "name": "Install Helm Chart",
+                            "children": []
+                        }]
+                    }]
+                }
+            ]
+        },
+        "propDefs": [],
+        "versionPresets": []
+    }],
+    "genericProcesses": [],
+    "teamMappings": [],
+    "tags": []
+}

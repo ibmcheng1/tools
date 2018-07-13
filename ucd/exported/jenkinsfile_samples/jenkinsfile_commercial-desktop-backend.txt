@@ -1,0 +1,49 @@
+pipeline {
+    agent {
+        label 'docker-maven'
+    }
+
+    environment {
+        MAVEN_VERSION = "Maven3.5"
+        JAVA_VERSION = "JDK8"
+        SLACK_CHANNEL = "#RD3910"
+        ARTIFACTORY_ID = "Production Artifactory"
+        TARGET_LOCATION = "commweb-groupadmin/target"
+        FUNCTIONAL_TEST_LOCATION = ""
+        EAR_FILE = "commweb-groupadmin-0.0.1-SNAPSHOT.ear"
+    }
+
+    tools {
+        jdk "${env.JAVA_VERSION}"
+    }
+
+    stages {
+        stage("Initialization") {
+            steps {
+                sh 'printenv'
+                pipelineBegin("The Pipeline ${currentBuild.fullDisplayName} started build number ${BUILD_NUMBER} for branch ${BRANCH_NAME}. Follow along at $JOB_DISPLAY_URL if you'd like.")
+            }
+        }
+
+        stage("BuildUnitTestScan") {
+            steps {
+                script {
+                    server = Artifactory.server "${env.ARTIFACTORY_ID}"
+                    def rtMaven = Artifactory.newMavenBuild()
+                    rtMaven.resolver server: server, releaseRepo: 'libs-release', snapshotRepo: 'libs-snapshot'
+                    rtMaven.deployer server: server, releaseRepo: 'libs-release-local', snapshotRepo: 'libs-snapshot-local'
+                    rtMaven.tool = "${env.MAVEN_VERSION}"
+                    buildInfo = rtMaven.run pom: 'pom.xml', goals: 'javadoc:javadoc test install sonar:sonar -Dsonar.host.url=http://a70lpcomsnrq001.a70adom.bcbssc.com:8080'
+                    sendASlackMessage('#00FF00', "${currentBuild.fullDisplayName} build stage completed successfully.")
+                }
+            }
+        }
+
+        stage("BlackDuck Scan") {
+            steps {
+                script {
+                    withEnv(["JAVA_HOME=${ tool 'JDK8' }", "PATH+MAVEN=${ tool 'Maven3.5' }/bin:${env.JAVA_HOME}/bin"]) {
+                        configFileProvider ([configFile(fileId: 'artifactory-settings', variable: 'MAVEN_SETTINGS')]) {
+                            hub_detect '--detect.maven.build.command="-s $MAVEN_SETTINGS clean dependency:tree" --detect.maven.scope=compile'
+                        }
+                    }
