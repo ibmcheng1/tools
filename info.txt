@@ -1,5 +1,6 @@
 rc=`cut -d. -f1 <<< build/jenkinslibrary.82 2>&1`
 echo "build/jenkinslibrary" | sed -r 's/[/]+/-/g'
+echo "$a" | tr '[:upper:]' '[:lower:]'
 
 ==================
 // upload helm chart to ICP
