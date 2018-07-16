@@ -1,3 +1,5 @@
+rc=`cut -d. -f1 <<< build/jenkinslibrary.82 2>&1`
+
 ==================
 // upload helm chart to ICP
 // Loads a Helm chart archive to an IBM Cloud Private cluster. 
