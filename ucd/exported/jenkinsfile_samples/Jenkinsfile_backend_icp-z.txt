@@ -1,0 +1,70 @@
+@Library("bcbsscMavenPipeline") _
+
+def ARCHITECTURE = "s390x"
+def ARTIFACT_PATH = ""
+
+// This block contains all the changes made to switch platforms.  
+def volumes = [ hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock') ]
+volumes += secretVolume(secretName: 'jenkins-docker-sec', mountPath: '/jenkins_docker_sec')
+podTemplate(label: 'icp-liberty-build-z-july-1', slaveConnectTimeout: 600,
+            nodeSelector: 'beta.kubernetes.io/arch=s390x', nodeUsageMode: 'EXCLUSIVE',
+    containers: [
+        containerTemplate(name: 'jnlp', image: 'dc1cp01.icp:8500/default/z-jnlp-ibm:3.20-june2018.2', args: '${computer.jnlpmac} ${computer.name}'),
+        containerTemplate(name: 'maven', image: 'dc1cp01.icp:8500/default/maven-z-ibm:3.5.4-jdk-8-july2018.1', ttyEnabled: true, command: 'cat'),
+        containerTemplate(name: 'docker', image: 'dc1cp01.icp:8500/default/docker-z:17.12-june2018.1', ttyEnabled: true, command: 'cat'),
+        containerTemplate(name: 'kubectl', image: 'dc1cp01.icp:8500/default/k8s-kubectl-ibm:v1.10.0-1', ttyEnabled: true, command: 'cat'),
+    ],
+    volumes: volumes
+)
+{
+    node ('icp-liberty-build-z-july-1') {
+// End of platform-changing block
+        def commitId = ""
+        def APPLICATION_NAME = "commercial-desktop"
+        def COMPONENT_NAME = "commercial-desktop-backend"
+        def DEPLOY_PROCESS = "Deploy-commercial-desktop-backend"
+        
+        stage('Initialize') {
+            echo sh(returnStdout: true, script: 'env')
+        }
+        // Every pipeline run will need to check out the code into a fresh workspace.
+        stage('Checkout') {
+            commitId = codeCheckout(BRANCH_NAME)
+            imageTag = "dc1cp01.icp:8500/commercial-desktop/commercial-desktop-backend:${commitId}"
+        }
+        stage('Build Application') {
+            mavenBuild("pom.xml", "target/site/apidocs", "target/site/sonar", ARTIFACT_PATH)
+        }
+        stage('Open-Source Security Scan') {
+            // blackduckScan()
+        }
+        stage('Build Container') {
+            dockerBuild(imageTag, APPLICATION_NAME)
+        }
+        // Unit Deployment
+        stage ('UrbanCode Deploy to Dev') { 
+            ucdDeploy(commitId, "zDev", true, APPLICATION_NAME, COMPONENT_NAME, DEPLOY_PROCESS)
+        }
+        // Functional Testing in Unit
+        stage ('Automated Regression Test') {
+          echo "STUB: SELENIUM TESTING WILL GO HERE WHEN I GET AROUND TO IT"
+        }                
+        // System Deployment
+        stage ('UrbanCode Deploy to System') { 
+            ucdDeploy(commitId, "zSystem", false, APPLICATION_NAME, COMPONENT_NAME, DEPLOY_PROCESS)
+        }
+        
+        
+    
+    // This stage can replace the deploy stage in a pinch, for testing purposes, to debug Helm more easily.
+ 	// stage ('Helm') {
+	// 	container('helm') {
+	// 		sh """
+	// 		helm init --skip-refresh --client-only
+	// 		helm upgrade --install --wait --values chart/commercial-desktop-backend/values.yaml commercial-desktop-backend-dave chart/commercial-desktop-backend --tls --tls-ca-cert=/jenkins_helm_sec/ca.pem --tls-cert=/jenkins_helm_sec/cert.pem --tls-key=/jenkins_helm_sec/key.pem 
+	// 		"""
+	// 	}
+	// }   
+    
+    }
+}
