@@ -1,0 +1,128 @@
+
+
+https://hub.docker.com/u/selenium/
+=============================================
+1. clone necessary charts including Selenium
+mkdir /tmp/IBM/kubernetes/
+cd /tmp/IBM/kubernetes/
+git clone https://github.com/kubernetes/charts.git
+
+2. pull, tag, and push images
+// https://hub.docker.com/u/selenium/
+
+// pull
+docker pull selenium/node-hub
+docker pull selenium/node-chrome
+docker pull selenium/node-chrome-debug
+docker pull selenium/node-firefox
+docker pull selenium/node-firefox-debug
+
+[root@a70lscomibmc016:/root]# docker image ls | grep sel
+selenium/node-firefox-debug                         latest                         1db47b0b168d        12 hours ago        758MB
+selenium/node-chrome-debug                          latest                         9421d1c2ef91        13 hours ago        905MB
+selenium/node-firefox                               latest                         d29df89db127        13 hours ago        731MB
+selenium/node-chrome                                latest                         d1d61af41c3a        13 hours ago        878MB
+selenium/hub                                        latest                         62b5b3328d6f        13 hours ago        289MB
+
+// tag
+docker tag selenium/hub dc1cp01.icp:8500/default/selenium/hub
+docker tag selenium/node-chrome dc1cp01.icp:8500/default/selenium/node-chrome
+docker tag selenium/node-firefox dc1cp01.icp:8500/default/selenium/node-firefox
+docker tag selenium/node-chrome-debug dc1cp01.icp:8500/default/selenium/node-chrome-debug
+docker tag selenium/node-firefox-debug dc1cp01.icp:8500/default/selenium/node-firefox-debug
+
+[root@a70lscomibmc016:/root]# docker image ls | grep sel
+dc1cp01.icp:8500/default/selenium/node-firefox-debug   latest                         1db47b0b168d        13 hours ago        758MB
+selenium/node-firefox-debug                            latest                         1db47b0b168d        13 hours ago        758MB
+dc1cp01.icp:8500/default/selenium/node-chrome-debug    latest                         9421d1c2ef91        13 hours ago        905MB
+selenium/node-chrome-debug                             latest                         9421d1c2ef91        13 hours ago        905MB
+dc1cp01.icp:8500/default/selenium/node-firefox         latest                         d29df89db127        13 hours ago        731MB
+selenium/node-firefox                                  latest                         d29df89db127        13 hours ago        731MB
+dc1cp01.icp:8500/default/selenium/node-chrome          latest                         d1d61af41c3a        13 hours ago        878MB
+selenium/node-chrome                                   latest                         d1d61af41c3a        13 hours ago        878MB
+dc1cp01.icp:8500/default/selenium/hub                  latest                         62b5b3328d6f        13 hours ago        289MB
+selenium/hub                                           latest                         62b5b3328d6f        13 hours ago        289MB
+
+// push
+// login to target ICP docker registry, and then push the image
+// during Selenium install, the domain specific image should be used, and the secret is different.
+docker login dc1cp01.icp:8500
+// failed: docker push selenium/hub
+docker push dc1cp01.icp:8500/default/selenium/hub
+docker push dc1cp01.icp:8500/default/selenium/node-chrome
+docker push dc1cp01.icp:8500/default/selenium/node-firefox
+docker push dc1cp01.icp:8500/default/selenium/node-chrome-debug
+docker push dc1cp01.icp:8500/default/selenium/node-firefox-debug 
+
+// may need to change image scope from namespace to global via ICP admin console.
+
+3. Edit /tmp/IBM/kubernetes/charts/stable/selenium/values.yaml
+cd /tmp/IBM/kubernetes/charts/stable/selenium
+vi values.yaml
+// node selector -> beta.kubernetes.io/arch: "amd64"
+
+
+// image
+// "nodeSelector": {
+          "beta.kubernetes.io/arch": "amd64"
+        },
+
+
+4. install
+/tmp/IBM/kubernetes/charts/stable/selenium
+helm install --name selenium-01 -f ./values.yaml . --debug --tls --namespace development
+
+cd /opt/ibm-ucd-components/selenium/0.7.0
+// local chart
+helm install --name selenium-commercial-desktop-system -f ./values.yaml . --debug --tls --namespace systemtest
+helm upgrade --install selenium-commercial-desktop-system -f ./values.yaml . --debug --tls --namespace systemtest
+helm delete selenium-commercial-desktop-system --purge --tls
+
+helm upgrade --install selenium-commercial-desktop-system . --debug --tls --namespace systemtest
+
+-----
+helm upgrade selenium-commercial-desktop-system ./helm_chart --namespace systemtest --install --wait --timeout 30 --tls
+helm upgrade selenium-commercial-desktop-system . --namespace systemtest --install --wait --timeout 30 --tls
+helm upgrade selenium-commercial-desktop-system . --namespace systemtest --install --debug --tls
+
+helm delete selenium-commercial-desktop-system --purge --tls
+  
+
+// catalog chart
+helm install --name selenium-commercial-desktop-systemtest -f ./values.yaml local-charts/selenium --debug --tls --namespace systemtest
+// add helm repo
+helm install --name selenium-commercial-desktop-systemtest -f /opt/ibm-ucd-components/selenium/0.7.0./values.yaml local-charts/selenium --debug --tls --namespace systemtest
+
+
+selenium-01-selenium-hub
+LoadBalancer
+10.139.15.120
+<pending>
+4444:30791/TCP
+
+http://10.139.9.9:30791/
+
+kubectl get pods --namespace development
+
+5. uninstall
+helm delete selenium-01 --purge --tls
+
+
+=================
+// upload chart
+bx pr login -a https://10.139.9.10:8443 --skip-ssl-validation
+bx pr load-helm-chart --archive selenium-0.7.0.tgz
+
+// clustername is default to mycluster.icp, it may need to specified for different cluter name.
+bx pr load-helm-chart --archive selenium-0.7.0.tgz --clustername dc1cp01.icp
+
+############################################
+UCD component:  /opt/ibm-ucd-components/selenium/0.7.0.0
+##########################################
+
+cp /tmp/IBM/kubernetes/charts/stable/selenium/* /opt/ibm-ucd-components/selenium/0.7.0.0/
+cp -r /tmp/IBM/kubernetes/charts/stable/selenium /opt/ibm-ucd-components/selenium/0.7.0.0/
+
+
+
+
