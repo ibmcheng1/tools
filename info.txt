@@ -1,3 +1,58 @@
+echo "Environment Name = ${p:environment.name}"
+echo "Component Name = ${p:component.name}"
+echo "Current selected Component Version Name = ${p:version.name}"
+
+rc=`cut -d. -f1 <<< ${p:version.name} 2>&1`
+echo "temporary rc = $rc"
+rc=`echo "${rc}" | sed -r 's/[/]+/-/g' 2>&1`
+echo "Git Branch = $rc"
+hr="${p:component.name}-${p:environment.name}-${rc}"
+echo "Old Helm release = ${p:helm.release}-${rc}"
+echo "New Helm release = ${hr}"
+echo "Ensure helm release name only contains lower case."
+echo "Helm release (all lower case) = ${hr}"
+hr=`echo "${hr}" | tr '[:upper:]' '[:lower:]' 2>&1`
+echo "Ensure helm release name has < 53 characters, and cut off after 53th character."
+hr=`cut -c-53 <<< ${hr} 2>&1`
+echo "Final Helm release = ${hr}"
+helm upgrade ${hr} ./helm_chart --namespace ${p:icp.namespace} --install --wait --timeout 30 --tls --debug
+######################################################################
+
+var exit = properties.get('exitCode');
+
+commandOut.println("initial step exitCode = " + exit);
+
+var passed = 0;
+commandOut.println("initial passed = " + passed);
+
+scanner.register("STATUS: DEPLOYED", function(lineNumber, line) {
+      var value = line.replace("STATUS: ", "");
+      properties.put("Value", value);
+      passed = 1;
+  });
+  
+scanner.scan();
+
+var currentValue = properties.get('Value');
+commandOut.println("STATUS = " + currentValue);
+commandOut.println("Determined passed = " + passed);
+
+if (passed == 1) {
+    commandOut.println("passed is 1. found keyword. Override Failure and set status to Success !!!");
+    properties.put('Status', 'Success');
+} else {
+    commandOut.println("passed is not 1 -> keyword not found. Failure.");
+    properties.put('Status', 'Failure');
+}
+
+commandOut.println("Final step status = " + properties.get('Status'));
+###########################################################################
+echo "Check release status: namespace = ${p:icp.namespace} ,  release name = ${p:helm.release}"
+
+helm ls --deployed --namespace ${p:icp.namespace} --tls | awk '/${p:helm.release}/ {print "Counter: " $2}'
+
+
+########################################################
 rc=`cut -d. -f1 <<< build/jenkinslibrary.82 2>&1`
 echo "build/jenkinslibrary" | sed -r 's/[/]+/-/g'
 echo "$a" | tr '[:upper:]' '[:lower:]'
