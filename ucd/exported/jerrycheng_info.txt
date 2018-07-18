@@ -40,6 +40,8 @@ http://10.139.9.9:32046/login
 admin / jAhn1V1lrW
 
 // Git
+https://github.com/ibmcheng1/tools/
+
 https://git.bcbssc.com/login?return_to=https%3A%2F%2Fgit.bcbssc.com%2F
 https://git.bcbssc.com/9Z60
 https://git.bcbssc.com/xce1/jenkinstest
@@ -49,6 +51,8 @@ https://git.bcbssc.com/BlueCrossBlueShieldSC/commercial-desktop
 
 https://git.bcbssc.com/BenLink/jenkins-library-demo
 https://git.bcbssc.com/BlueCrossBlueShieldSC/commercial-desktop-backend/tree/build/jenkinslibrary
+
+https://git.bcbssc.com/BenLink/jenkins-library-demo
 
 ======================================
 kubectl get pods | grep jenkinstest
@@ -261,4 +265,95 @@ command: helm upgrade poc-commercial-desktop-backend ./helm_chart --namespace de
 E0711 12:32:13.534243   12399 portforward.go:303] error copying from remote stream to local connection: readfrom tcp4 127.0.0.1:40658->127.0.0.1:39154: write tcp4 127.0.0.1:40658->127.0.0.1:39154: write: broken pipe
  
  
+##################################
+Linux commands:
+##################################
+// Get string after character [duplicate]
+// https://stackoverflow.com/questions/15148796/get-string-after-character
+cut -d "/" -f 2 <<< "$your_str"
+
+cut -d "/" -f 2 <<< "build/jenkinslibrary"
+
+---
+rc=`cut -d. -f1 <<< ${p:Get Component Version/version.name} 2>&1`
+
+rc=`cut -d "/" -f 2 <<< "${rc}" 2>&1`
+// or
+rc=`echo "${rc}" | sed -r 's/[/]+/-/g' 2>&1`
+----
+// test scenario 1:
+rc=`cut -d. -f1 <<< build/jenkinslibrary.82 2>&1`
+-> build/jenkinslibrary
+rc=`cut -d "/" -f 2 <<< "${rc}" 2>&1`
+-> jenkinslibrary
+----
+
+// test scenario 2:
+rc=`cut -d. -f1 <<< build/jenkinslibrary.82 2>&1`
+-> build/jenkinslibrary 
+rc=`echo "${rc}" | sed -r 's/[/]+/-/g' 2>&1`
+-> build-jenkinslibrary
+-------------------
+// ensure less than 53 characters
+cut -c-53 <<< ${data}
+-------------------------
+
+echo "build/jenkinslibrary" | sed -r 's/[/]+/-/g'
+echo $rc
+===========================================
+// replace upper case with lower case in a String
+echo "$a" | tr '[:upper:]' '[:lower:]'
+
+=================================
       
+// Get string before character [duplicate], e.g. .
+cut -d. -f1 <<< "$your_str"
+rc=`cut -d. -f1 <<< ${p:Get Component Version/version.name} 2>&1`
+
+=====================================
+commercial-desktop-backend-dev-build/jenkinslibrary
+command output: 
+Component Version Name = build/jenkinslibrary.82
+Git Branch = build/jenkinslibrary
+Helm release = commercial-desktop-backend-dev-build/jenkinslibrary
+[debug] Created tunnel using local port: '43386'
+ 
+[debug] SERVER: "127.0.0.1:43386"
+ 
+[debug] Key="/root/.helm/key.pem", Cert="/root/.helm/cert.pem", CA="/root/.helm/ca.pem"
+ 
+Error: UPGRADE FAILED: invalid release name, must match regex ^(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])+$ and the length must not longer than 53
+===============================
+command exit code: 1
+
+=================================
+===============================
+command output: 
+Environment Name = Dev
+Component Name = commercial-desktop-backend
+Component Version Name = build/jenkinslibrary.82
+temporary rc = build/jenkinslibrary
+Git Branch = build-jenkinslibrary
+Old Helm release = commercial-desktop-backend-dev-build-jenkinslibrary
+New Helm release = commercial-desktop-backend-Dev-build-jenkinslibrary
+[debug] Created tunnel using local port: '45084'
+ 
+[debug] SERVER: "127.0.0.1:45084"
+ 
+[debug] Key="/root/.helm/key.pem", Cert="/root/.helm/cert.pem", CA="/root/.helm/ca.pem"
+ 
+Release "commercial-desktop-backend-Dev-build-jenkinslibrary" does not exist. Installing it now.
+[debug] CHART PATH: /opt/ibm-ucd/agent/var/work/commercial-desktop-backend/helm_chart
+ 
+Error: release commercial-desktop-backend-Dev-build-jenkinslibrary failed: Service "commercial-desktop-backend-Dev-build-jenkinslibrary-commercial" is invalid: metadata.name: Invalid value: "commercial-desktop-backend-Dev-build-jenkinslibrary-commercial": a DNS-1035 label must consist of lower case alphanumeric characters or '-', start with an alphabetic character, and end with an alphanumeric character (e.g. 'my-name',  or 'abc-123', regex used for validation is '[a-z]([-a-z0-9]*[a-z0-9])?')
+===============================
+
+No version for that component exists for that resource
+#echo "Component Version Name = ${p:Get Component Version/version.name}"
+================================
+
+helm ls --deployed --tls | grep commercial
+
+data=commercial-desktop-backend-system-build-jenkinslibrary
+
+cut -c-53 <<< ${data}
