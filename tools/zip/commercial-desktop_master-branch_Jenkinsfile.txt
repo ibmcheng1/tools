@@ -1,0 +1,286 @@
+pipeline {
+  agent { label 'docker-nodejs' }
+  stages {
+    stage('Initialize') {
+      steps {
+        initialize()
+        script {
+          env.FAILURE_STAGE = 'Initialize'
+
+          // updateSlack('#ff9933', "The Pipeline ${currentBuild.fullDisplayName} started. (${env.BUILD_URL})")
+
+          sh 'npm config set registry http://a70lpcomjfrg001.a70adom.bcbssc.com/artifactory/api/npm/npm/'
+          sh 'npm config set _auth amVua2luczpqZW5raW5z' // Jenkins user named "jenkins" with jenkins:<password> base64 encoded
+          sh 'npm config set email RD3910_I/S@bcbssc.com'
+          sh 'npm config set always-auth true'
+          sh 'npm config set strict-ssl false'
+          sh 'export NODE_TLS_REJECT_UNAUTHORIZED="0"'
+          sh 'npm install'
+        }
+      }
+    }
+
+    stage('Run BlackDuck Security Scan') {
+      steps {
+        script {
+          echo 'STUB: Should normally run BlackDuck Security Scan'
+        }
+
+        /***************************************************************************************/
+        /* Stop running black duck security scans since Black Duck and LEDS are trying to get  */
+        /* the SAML/SSO feature working and the current Jenkins connection is broken.          */
+        /***************************************************************************************/
+
+        // echo 'Run the BlackDuck Scans'
+        // hub_detect '--detect.npm.include.dev.dependencies=false --detect.source.path=.'
+        // hub_scan_failure(failBuildForPolicyViolations: true, buildStateOnFailure: 'FAILURE')
+        // script {
+        //   if (currentBuild.result == 'FAILURE') {
+        //     error "Pipeline aborted because BlackDuck policy violations were found!"
+        //   }
+        // }
+      }
+    }
+
+    stage('Build') {
+      steps {
+        script {
+          env.FAILURE_STAGE = 'Build'
+
+          sh '''
+npm run build
+'''
+          // updateSlack('good', "Build Stage Completed For ${currentBuild.fullDisplayName}.")
+        }
+      }
+    }
+    stage('Quality Scans') {
+      parallel {
+        stage('Unit Test with Code Coverage and SonarQube') {
+          steps {
+            script { env.FAILURE_STAGE = 'Quality'}
+            runUnitTests()
+          }
+        }
+        stage('Publish Lint') {
+          steps {
+            echo 'Publish lint results'
+            checkstyle canComputeNew: false, defaultEncoding: '', healthy: '0', pattern: 'lint/checkstyle.xml', thresholdLimit: 'high', unHealthy: '1'
+          }
+        }
+      }
+    }
+    stage('Document') {
+      steps {
+        script {
+          env.FAILURE_STAGE = 'Document'
+
+          sh '''
+npm run doc
+'''
+          publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'doc', reportFiles: 'index.html', includes: '**/*', reportName: 'JSDoc', reportTitles: ''])
+          // updateSlack('good', "Document Stage Completed For ${currentBuild.fullDisplayName}.")
+        }
+      }
+    }
+    stage('Publish') {
+      steps {
+        script {
+          env.FAILURE_STAGE = 'Publish'
+
+//           sh '''
+// npm publish
+// '''
+          // updateSlack('good', "Document Stage Completed For ${currentBuild.fullDisplayName}.")
+        }
+      }
+    }
+    stage('Deploy to Unit') {
+      steps {
+        script {
+          echo 'STUB: Deploying to UNIT'
+
+          // updateSlack('good', "Deploy to Unit Completed For ${currentBuild.fullDisplayName}.")
+        }
+
+      }
+    }
+    stage('Functional Testing') {
+      steps {
+        script {
+          env.FAILURE_STAGE = 'Functional Testing'
+          echo 'STUB: Functional Testing would run here.'
+/*
+          sh '''
+npm run webdriver
+'''
+*/
+
+          // updateSlack('good', "Functional Testing Stage Completed For ${currentBuild.fullDisplayName}.")
+        }
+
+      }
+    }
+    stage('Performance Testing') {
+      when {
+        branch 'master'
+      }
+      steps {
+        echo 'STUB: Performance Testing would run here.'
+        // updateSlack('good', "Performance Testing Stage Completed For ${currentBuild.fullDisplayName}.")
+      }
+    }
+  }
+  tools {
+    nodejs "${env.NODE_VERSION}"
+  }
+  environment {
+    SLACK_CHANNEL = '#RD3910'
+    ARTIFACTORY_ID = 'BCBSSCArtifactory'
+    NODE_VERSION = 'Node8'
+  }
+  options {
+    disableConcurrentBuilds()
+  }
+  post {
+    always {
+      script {
+        if (currentBuild.result == 'SUCCESS') {
+          deleteDir()
+        }
+      }
+    }
+
+    failure {
+      script {
+        def errorMessage = "<html><body><p>The pipeline for ${currentBuild.fullDisplayName} failed to complete.</p><p>To view the logs, please click <a href=\"${env.BUILD_URL}\">here</a></p>"
+        if(env.FAILURE_STAGE == 'Quality') {
+          errorMessage += "<p>Quality gate check failed: <a href=\"http://a70lpcomsnrq001.a70adom.bcbssc.com/dashboard/index/commercial-desktop:" + env.BRANCH_NAME + "\">SonarQube Results</a></p>"
+        }
+        errorMessage += "</body></html>"
+
+        // updateSlack('#FF0000', errorMessage)
+        sendAnEmail("Build - ${currentBuild.fullDisplayName} - Failure", errorMessage);
+      }
+    }
+
+    unstable {
+      // updateSlack('#f4ce42', "The pipeline ${currentBuild.fullDisplayName} is unstable. (${env.BUILD_URL})")
+      sendAnEmail("Build - ${currentBuild.fullDisplayName} - Unstable", "<html><body><p>The pipeline for ${currentBuild.fullDisplayName} is unstable.</p><p>To view the logs, please click <a href=\"${env.BUILD_URL}\">here</a></p></body></html>");
+    }
+
+    success {
+      // updateSlack('good', "The pipeline ${currentBuild.fullDisplayName} completed successfully. (${env.BUILD_URL})")
+      sendAnEmail("Build - ${currentBuild.fullDisplayName} - Successful", "<html><body><p>The pipeline for ${currentBuild.fullDisplayName} completed successfully.</p><p>To view the logs, please click <a href=\"${env.BUILD_URL}\">here</a></p></body></html>");
+    }
+
+  }
+  parameters {
+    string(name: 'notificationEmail', defaultValue: 'RD3910_I/S@bcbssc.com', description: 'The email address to send notifications to')
+  }
+}
+
+/*
+ * Initialization steps
+ */
+
+/**
+ * Intitializes some environment variables. This will setup the IMAGE_NAME variable which can then be used with Docker.
+ */
+def initialize() {
+  env.MAX_ENVIRONMENTNAME_LENGTH = 32
+  setEnvironment()
+  env.IMAGE_NAME = "commercial-desktop:" + ((env.BRANCH_NAME == "master") ? "" : "${env.ENVIRONMENT}-") + env.BUILD_ID
+  showEnvironmentVariables()
+}
+
+/**
+ * Uses the branch name to drive what the environment should be called. If this is not on the master branch, then the
+ * environment will be prefixed with 'dev-'.
+ */
+def setEnvironment() {
+  def branchName = env.BRANCH_NAME.toLowerCase()
+  def environment = 'dev'
+  echo "branchName = ${branchName}"
+  if (branchName == "") {
+    showEnvironmentVariables()
+    throw "BRANCH_NAME is not an environment variable or is empty"
+  } else if (branchName != "master") {
+    // split off the branch type if it exists
+    if (branchName.contains("/")) {
+      branchName = branchName.split("/")[1]
+    }
+    // remove '-' characters
+    branchName = branchName.replace("-", "")
+    // remove the JIRA project name
+    if (env.JIRA_PROJECT_NAME) {
+      branchName = branchName.replace(env.JIRA_PROJECT_NAME, "")
+    }
+    // limit the length to the max allowed
+    branchName = branchName.take(env.MAX_ENVIRONMENTNAME_LENGTH as Integer)
+    environment += "-" + branchName
+  }
+  echo "Using environment: ${environment}"
+  env.ENVIRONMENT = environment
+  env.BRANCH_NAME = branchName
+}
+
+/**
+ * Writes the environment variables to a file and then shows it.
+ */
+def showEnvironmentVariables() {
+  sh 'env | sort > env.txt'
+  sh 'cat env.txt'
+}
+
+/*
+ * Test Steps
+ */
+
+/**
+ * Run the HeadlessChrome unit tests with code coverage. The results will get published to Jenkins. The coverage results are
+ * published to the project and the unit test results are published to the build. This will also generate a SonarQube
+ * report.
+ */
+def runUnitTests() {
+  sh 'npm run test -- --BRANCH_NAME ' + env.BRANCH_NAME
+  sh 'mkdir test-reports/headlesschrome'
+  sh 'mv test-reports/HeadlessChrome*/* test-reports/headlesschrome'
+  echo 'Publishing headlesschrome unit test results'
+  junit 'test-reports/headlesschrome/*.xml'
+  echo 'Publishing headlesschrome results'
+  publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'coverage/html', reportFiles: 'index.html', reportName: 'Code Coverage', reportTitles: ''])
+
+  // let's make sure the SonarQube quality checks are good
+  sh "echo 'SonarQube http://a70lpcomsnrq001.a70adom.bcbssc.com/dashboard?id=commercial-desktop' > anchorChain.tsv"
+  withSonarQubeEnv('Production SonarQube') {
+  }
+  def qualityGate = waitForQualityGate false
+  if (qualityGate.status != 'OK') {
+    error "Pipeline aborted due to quality gate coverage failure: ${qualityGate.status}"
+  }
+}
+
+/*
+ * Utility Steps
+ */
+
+/**
+ * Sends an email notification about something.
+ *
+ * @param subject The subject to put on the message.
+ * @param body The body of the email. This supports html.
+ */
+def sendAnEmail(subject, body) {
+  emailext(to: "${params.notificationEmail}", subject: subject, body: body, from: 'jenkins@bcbssc.com', mimeType: 'text/html')
+}
+
+/**
+ * Sends a message to slack.
+ *
+ * @param color The color to use for the message.
+ * @param message The message to publish to slack.
+ */
+def updateSlack(color, message) {
+  slackSend(channel: "${env.SLACK_CHANNEL}", color: color, message: message)
+}
