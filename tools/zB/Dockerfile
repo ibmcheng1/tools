@@ -1,4 +1,5 @@
-FROM dc1cp01.icp:8500/default/websphere-liberty:webProfile7-june2018.1
+#change this to change platforms
+FROM dc1cp01.icp:8500/default/websphere-liberty-z:webProfile7-june2018.1
 
 COPY server/server.xml /config/
 COPY server/libs/db2*.jar /config/resources/db2/
