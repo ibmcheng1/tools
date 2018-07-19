@@ -26,3 +26,4 @@ resources:
     memory: 300Mi
 # Changed to change platforms
 nodeSelector: {beta.kubernetes.io/arch: amd64}
+
