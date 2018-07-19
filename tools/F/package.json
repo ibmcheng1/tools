@@ -1,0 +1,139 @@
+{
+  "name": "commercial-desktop",
+  "version": "0.1.0",
+  "description": "Commercial Desktop",
+  "main": "index.js",
+  "scripts": {
+    "test": "gulp test",
+    "build": "gulp",
+    "lint": "gulp lint",
+    "serve:dev": "gulp serve:dev",
+    "serve:virtual": "gulp serve:virtual",
+    "serve:unit": "gulp serve:unit",
+    "serve:system": "gulp serve:system",
+    "serve:qual": "gulp serve:qual",
+    "serve:production": "gulp serve:production",
+    "serve:dist:dev": "gulp serve:dist:dev",
+    "serve:dist:virtual": "gulp serve:dist:virtual",
+    "serve:dist:unit": "gulp serve:dist:unit",
+    "serve:dist:system": "gulp serve:dist:system",
+    "serve:dist:qual": "gulp serve:dist:qual",
+    "serve:dist:production": "gulp serve:dist:production",
+    "test:auto": "gulp test:auto",
+    "test:dev": "gulp test:dev",
+    "doc": "gulp doc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.bcbssc.com/BlueCrossBlueShieldSC/commercial-desktop.git"
+  },
+  "publishConfig": {
+    "registry": "http://a70lpcomjfrg001.a70adom.bcbssc.com/artifactory/api/npm/npm/"
+  },
+  "keywords": [],
+  "contributors": [],
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "bootstrap": "^4.0.0",
+    "bootstrap-vue": "^2.0.0-rc.2",
+    "minimist": "^1.2.0",
+    "moment": "^2.22.1",
+    "vue": "^2.5.16",
+    "vue-router": "^2.2.1",
+    "vuex": "^3.0.1",
+    "vuex-persist": "^1.1.5"
+  },
+  "devDependencies": {
+    "ansi-colors": "^1.1.0",
+    "assign-deep": "^0.4.7",
+    "autoprefixer": "^7.0.0",
+    "axios-mock-adapter": "^1.15.0",
+    "babel-core": "^6.23.1",
+    "babel-eslint": "^7.1.1",
+    "babel-loader": "^7.1.4",
+    "babel-plugin-istanbul": "^4.1.6",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-runtime": "^6.23.0",
+    "browser-sync": "^2.18.8",
+    "browser-sync-spa": "^1.0.3",
+    "circular-json": "^0.5.3",
+    "css-loader": "^0.28.11",
+    "del": "^2.2.2",
+    "es6-shim": "^0.35.3",
+    "eslint": "^3.18.0",
+    "eslint-config-xo-space": "^0.15.0",
+    "eslint-loader": "^2.0.0",
+    "eslint-plugin-babel": "^4.0.1",
+    "eslint-plugin-html": "^2.0.1",
+    "eslint-plugin-vue": "^4.4.0",
+    "fancy-log": "^1.3.2",
+    "file-loader": "^1.1.11",
+    "font-awesome": "^4.7.0",
+    "gulp": "^4.0.0",
+    "gulp-filter": "^5.0.0",
+    "gulp-hub": "^4.2.0",
+    "gulp-less": "^3.5.0",
+    "gulp-sonar": "^3.0.1",
+    "html-webpack-plugin": "^3.0.0",
+    "ink-docstrap": "^1.3.2",
+    "jasmine": "^2.5.3",
+    "javascript-state-machine": "^3.0.1",
+    "jquery": "^3.3.1",
+    "jsdoc": "^3.5.5",
+    "jsdoc-vue": "^1.0.0",
+    "json-loader": "^0.5.7",
+    "karma": "^2.0.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-coverage": "^1.1.2",
+    "karma-jasmine": "^1.1.2",
+    "karma-junit-reporter": "^1.2.0",
+    "karma-spec-reporter": "0.0.32",
+    "karma-webpack": "^3.0.0",
+    "mini-css-extract-plugin": "^0.4.0",
+    "node-sass": "^4.9.0",
+    "postcss-loader": "^2.1.3",
+    "sass-loader": "^7.0.1",
+    "string-replace-loader": "^2.1.1",
+    "style-loader": "^0.20.3",
+    "url-loader": "^1.0.1",
+    "vue-loader": "^14.2.2",
+    "vue-template-compiler": "^2.5.16",
+    "webpack": "^4.2.0",
+    "webpack-fail-plugin": "^1.0.5"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "browser": true,
+      "jasmine": true
+    },
+    "extends": [
+      "xo-space/esnext",
+      "plugin:vue/recommended"
+    ],
+    "plugins": [
+      "vue"
+    ],
+    "rules": {
+      "arrow-parens": "off",
+      "indent": [
+        "error",
+        4
+      ],
+      "linebreak-style": "off",
+      "vue/html-indent": [
+        "error",
+        4
+      ],
+      "vue/html-self-closing": "off"
+    },
+    "parserOptions": {
+      "parser": "babel-eslint",
+      "sourceType": "module"
+    }
+  }
+}
