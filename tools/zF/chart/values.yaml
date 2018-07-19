@@ -17,7 +17,7 @@ ingress:
   hosts:
   annotations: {
     "ingress.kubernetes.io/rewrite-target": "/",
-  #  "ingress.kubernetes.io/secure-backends": "true"
+    # "ingress.kubernetes.io/secure-backends": "true"
     }
   tls:
 resources:
@@ -25,5 +25,4 @@ resources:
     cpu: 200m
     memory: 300Mi
 # Changed to change platforms
-nodeSelector: {beta.kubernetes.io/arch: amd64}
-
+nodeSelector: {beta.kubernetes.io/arch: s390x}
