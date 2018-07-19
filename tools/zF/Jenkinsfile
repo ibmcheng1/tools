@@ -1,0 +1,76 @@
+@Library("bcbsscMavenPipeline") _
+
+def ARTIFACT_PATH = ""
+
+def volumes = [ hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock') ]
+volumes += secretVolume(secretName: 'jenkins-docker-sec', mountPath: '/jenkins_docker_sec')
+volumes += secretVolume(secretName: 'jenkins-helm-secret', mountPath: '/jenkins_helm_sec')
+volumes += persistentVolumeClaim(mountPath: '/root/.m2/repository', claimName: 'jenkins-maven')
+
+podTemplate(label: 'icp-liberty-build-july1',
+            nodeSelector: 'beta.kubernetes.io/arch=amd64', nodeUsageMode: 'EXCLUSIVE',   
+	    containers: [
+        containerTemplate(name: 'jnlp', image: 'dc1cp01.icp:8500/default/jnlp-slave'),
+        containerTemplate(name: 'helm', image: 'dc1cp01.icp:8500/default/k8s-helm:v2.7.2', ttyEnabled: true, command: 'cat'),
+        containerTemplate(name: 'maven', image: 'dc1cp01.icp:8500/default/maven:3.5.2-jdk-8-june2018.3', ttyEnabled: true, command: 'cat'),
+        containerTemplate(name: 'docker', image: 'dc1cp01.icp:8500/default/docker:17.12-june2018.1', ttyEnabled: true, command: 'cat'),
+        containerTemplate(name: 'kubectl', image: 'dc1cp01.icp:8500/default/k8s-kubectl:v1.8.3', ttyEnabled: true, command: 'cat'),
+    ],
+    volumes: volumes
+) {    node ('icp-liberty-build-july1') {
+
+        def BUILD_NOTIFICATIONS = "RD3910_I/S@bcbssc.com"    
+        def APPLICATION_NAME = "commercial-desktop"
+        def commitId = ""
+        def COMPONENT_NAME = "commercial-desktop-backend"
+        def DEPLOY_PROCESS = "Deploy-commercial-desktop-backend"
+
+        try {
+            // Every pipeline run will need to check out the code into a fresh workspace.
+            stage('Checkout') {
+                commitId = codeCheckout(BRANCH_NAME)
+                imageTag = "dc1cp01.icp:8500/commercial-desktop/commercial-desktop-backend:${commitId}"
+            }
+            stage('Build Application') {
+                mavenBuild("pom.xml", "target/site/apidocs", "target/site/sonar", ARTIFACT_PATH)
+            }
+            stage('Open-source Security Scan') {
+                echo "commented out"
+                // blackduckScan()
+            }
+            stage('Build Container') {
+                dockerBuild(imageTag, APPLICATION_NAME)
+            }
+            // Unit Deployment
+            stage ('UrbanCode Deploy to Dev') { 
+                ucdDeploy(commitId, "Dev", true, APPLICATION_NAME, COMPONENT_NAME, DEPLOY_PROCESS)
+            }
+            // Functional Testing in Unit
+            stage ('Automated Regression Test') {
+            echo "STUB: SELENIUM TESTING WILL GO HERE WHEN I GET AROUND TO IT"
+            }                
+            // System Deployment
+            stage ('UrbanCode Deploy to System') { 
+                ucdDeploy(commitId, "System", false, APPLICATION_NAME, COMPONENT_NAME, DEPLOY_PROCESS)
+            }
+
+            sendEmail(BUILD_NOTIFICATIONS, "","", "noreply@bcbssc.com", "dg70@bcbssc.com", "ICP Build SUCCEEDED:" + APPLICATION_NAME + ":/" + BRANCH_NAME, "Program complete.  You may enter when ready. (TODO: Add URL here)")
+
+        } catch (err) {
+            sendEmail(BUILD_NOTIFICATIONS, "","", "noreply@bcbssc.com", "dg70@bcbssc.com", "ICP Build FAILED:" + APPLICATION_NAME + ":/" + BRANCH_NAME, "We, uh... had an accident.")
+        }
+        
+        
+    
+    // This stage can replace the deploy stage in a pinch, for testing purposes, to debug Helm more easily.
+ 	// stage ('Helm') {
+	// 	container('helm') {
+	// 		sh """
+	// 		helm init --skip-refresh --client-only
+	// 		helm upgrade --install --wait --values chart/commercial-desktop-backend/values.yaml commercial-desktop-backend-dave chart/commercial-desktop-backend --tls --tls-ca-cert=/jenkins_helm_sec/ca.pem --tls-cert=/jenkins_helm_sec/cert.pem --tls-key=/jenkins_helm_sec/key.pem 
+	// 		"""
+	// 	}
+	// }   
+    
+    }
+}
