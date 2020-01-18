@@ -1,0 +1,127 @@
+{
+    "name": "complianceGuard-GenProc",
+    "description": "",
+    "rootActivity": {
+        "edges": [
+            {
+                "to": "Check Pre and Post Processes",
+                "type": "ALWAYS",
+                "value": ""
+            },
+            {
+                "to": "d5e9dabee6483bd7afad70feec2a5c",
+                "from": "Check Pre and Post Processes",
+                "type": "SUCCESS",
+                "value": ""
+            }
+        ],
+        "offsets": [
+            {
+                "name": "d5e9dabee6483bd7afad70feec2a5c",
+                "x": -5,
+                "y": 470,
+                "h": 90,
+                "w": 130
+            },
+            {
+                "name": "Check Pre and Post Processes",
+                "x": -90,
+                "y": 240,
+                "h": 80,
+                "w": 350
+            }
+        ],
+        "layoutMode": "auto",
+        "type": "graph",
+        "name": "ce268adc-2657-4eb3-8f20-6503337c41ad",
+        "children": [
+            {
+                "type": "finish",
+                "name": "d5e9dabee6483bd7afad70feec2a5c",
+                "children": []
+            },
+            {
+                "allowFailure": false,
+                "useImpersonation": false,
+                "showHidden": false,
+                "impersonationUseSudo": false,
+                "pluginVersion": 10,
+                "commandName": "Run Groovy Script",
+                "pluginName": "Groovy",
+                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                "properties": {
+                    "groovyHome": "${GROOVY_HOME}",
+                    "scriptBody": "import groovy.json.*\r\n\r\ndef parentId       = \"${p:requestId}\"\r\ndef preProcess     = \"preDeployValidation-GenProc\"\r\n\/\/def preProcess     = \"G01-preDeployValidation\"\r\ndef postProcess    = \"postDeployUpdates-GenProc\" \r\n\r\n\/\/get json for application proess\r\ndef resturl  = \"\\\"${p:system\/UCD_SERVER_URL}\/rest\/deploy\/applicationProcessRequest\/${parentId}\\\"\"\r\ndef curlOut = callCurl(resturl)\r\ndef json = new JsonSlurper().parseText(curlOut)\r\n\r\nBoolean preProcessRan     = false  \/\/ this needs to flip to true\r\nBoolean postProcessRan    = false  \/\/ this needs to stay false \r\n\/\/ println \"DEBUG: App process:\"\r\n\/\/ println JsonOutput.prettyPrint(curlOut)\r\n\r\njson.rootTrace.children.each { step ->\r\n     \/\/println \"DEBUG: step: [$step]\"\r\n     def id      = step.childRequestId  \/\/ id is the object not the process\r\n     def type    = step.type\r\n     def display = step.displayName \r\n     println \"checking ${display}\"\r\n     \r\n      \/\/ inspect each of the application processes' child generic process that has already run \r\n     if (type.equals(\"runProcess\") && id != null) {  \r\n         \/\/get generic process name and status\r\n         def childResturl  =  \"\\\"${p:system\/UCD_SERVER_URL}\/rest\/process\/request\/${id}\\\"\"\r\n         def childCurlOut = callCurl(childResturl)\r\n         def childJson     = new JsonSlurper().parseText(childCurlOut)\r\n         def processName   = childJson?.process?.name\r\n         def processStatus = childJson?.result\r\n         println \"**************************************************************************\"\r\n         println \"Found Generic Process [$processName] with status [$processStatus]\"\r\n         \r\n         \/\/if it is pre deploy then fail if it is not sucessful already\r\n         if ( processName.equals(preProcess)) { \r\n               preProcessRan = true\r\n            if (!processStatus.equals(\"SUCCEEDED\") ) {\r\n                println \"Expecting [SUCCEEDED] but found [$processStatus]\"\r\n\t\t\t\tprintln \"ERROR: Pre-Deploy must be run successfully before any deployment processes\"\r\n                println \"Please update your application process and try again\"\r\n\t\t\t\tSystem.exit(1)\r\n               }\r\n\t        }\r\n\t   \r\n\t   \/\/if it is post deploy then fail if it has already run (since that means it is not at the end after components steps)\r\n        if ( processName.equals(postProcess) ) {\r\n            postProcessRan = true\r\n            println \"ERROR: Post-Deploy Step has run before the deployment\" \r\n            println \"Post-Deploy Update must be the last step in the application process\"\r\n            println \"Please update your application process and try again\"\r\n\t\t\tSystem.exit(1)\r\n         }\r\n         println \"**************************************************************************\"\r\n       }\/\/if runProcess\r\n} \/\/each step\r\n\r\n\/\/ Pre-Process Validation never ran\r\nif (!preProcessRan) {\r\n        println \"**************************************************************************\"\r\n        println \"ERROR: Pre-Deploy Validation Step must be run before the deployment\" \r\n        println \"Please update your application process and try again\"\r\n\t\tprintln \"**************************************************************************\"\r\n\r\n\t\tSystem.exit(1)\r\n}\r\n\t\t\r\nprintln \"exiting succesfully\"\r\nSystem.exit(0)\r\n\r\n\/\/~~~~~~~~~~~~~~~~~~~~~~~~~~ DEBUG ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\"\r\n\/\/uncomment to print the app process tree\r\nprintln \"Parent Process Info:\"\r\nprintln JsonOutput.prettyPrint(curlOut)\r\n\r\n\/\/===========================================================================================\r\ndef callCurl(def url) {\r\n    println \"Running curl -s -k -u <adminUser> \" + url\r\n    \r\n\tdef outputFileName = \"output-${p:request.id}.txt\"\r\n    def cmd = \"source ${p:system\/tokenFile}; curl -s -k -u \\$TOKEN \" + url + \" >> ${outputFileName}\"\r\n    def scriptFile = new File(\"script-${p:request.id}.sh\")\r\n    scriptFile.text = cmd;\r\n    def proc = [\"\/bin\/bash\",scriptFile.absolutePath].execute()\r\n    proc.waitForProcessOutput()\r\n\tdef outputFile = new File(outputFileName)\r\n\tdef output = outputFile.getText()\r\n\toutputFile.delete()\r\n    scriptFile.delete()\r\n    println output\r\n    return output\r\n}\r\n\r\n\/\/******************************************************************************\r\n\r\n"
+                },
+                "cachedAuthTokenRestriction": {
+                    "name": "System Default",
+                    "description": "Used by default for any plugin steps without a specified token restriction",
+                    "restrictions": [{
+                        "verb": "ALL",
+                        "url": "\/*"
+                    }]
+                },
+                "type": "plugin",
+                "name": "Check Pre and Post Processes",
+                "children": []
+            }
+        ]
+    },
+    "properties": [
+        {
+            "name": "contextType",
+            "value": "Resource",
+            "description": "",
+            "secure": false
+        },
+        {
+            "name": "defaultResourceId",
+            "value": "16c0adb4-1610-16d8-fcde-cf7b389bd746",
+            "description": "",
+            "secure": false
+        },
+        {
+            "name": "workingDir",
+            "value": "${p:resource\/work.dir}\/${p:process.name}",
+            "description": "",
+            "secure": false
+        }
+    ],
+    "propDefs": [{
+        "name": "requestId",
+        "label": "requestId",
+        "pattern": "",
+        "type": "TEXT",
+        "value": "${p:parentRequest.id}",
+        "required": false,
+        "description": "",
+        "placeholder": ""
+    }],
+    "teamMappings": [
+        {
+            "teamId": "16e18c34-90fa-e779-83d4-fff9d73ce4f6",
+            "teamLabel": "FN3 RAZOR",
+            "resourceTypeId": "20000000000000000000000000000109",
+            "resourceTypeName": "Process"
+        },
+        {
+            "teamId": "16862f83-e500-f6f8-2d8f-7ed325b325b0",
+            "teamLabel": "DevOps Ops Team",
+            "resourceTypeId": "20000000000000000000000000000109",
+            "resourceTypeName": "Process"
+        },
+        {
+            "teamId": "16b89fb0-b8f8-a6df-ac25-465292a92bc2",
+            "teamLabel": "All Users",
+            "resourceTypeId": "20000000000000000000000000000109",
+            "resourceTypeName": "Process"
+        },
+        {
+            "teamId": "16bae7e4-4098-8a50-3610-91c2e9999bcc",
+            "teamLabel": "s9ussm",
+            "resourceTypeId": "20000000000000000000000000000109",
+            "resourceTypeName": "Process"
+        }
+    ],
+    "linkedProcesses": []
+}

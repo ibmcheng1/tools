@@ -1,0 +1,224 @@
+{
+    "name": "componentPost-OpUpdates-GenProc",
+    "description": "all post deploy processing tasks for each component",
+    "rootActivity": {
+        "edges": [
+            {
+                "to": "make version eligible for production",
+                "from": "Add Secure Status to Version",
+                "type": "SUCCESS",
+                "value": ""
+            },
+            {
+                "to": "5e664473b89a37db54ef7aa75e93ba",
+                "from": "make version eligible for production",
+                "type": "VALUE",
+                "value": ""
+            },
+            {
+                "to": "Add Secure Status to Version",
+                "type": "ALWAYS",
+                "value": ""
+            },
+            {
+                "to": "5e664473b89a37db54ef7aa75e93ba",
+                "from": "Add status to make version eligible for production deployment",
+                "type": "SUCCESS",
+                "value": ""
+            },
+            {
+                "to": "Add status to make version eligible for production deployment",
+                "from": "make version eligible for production",
+                "type": "VALUE",
+                "value": "TEST\nACPT"
+            }
+        ],
+        "offsets": [
+            {
+                "name": "5e664473b89a37db54ef7aa75e93ba",
+                "x": -7.2760758014530325,
+                "y": 560,
+                "h": 90,
+                "w": 140
+            },
+            {
+                "name": "make version eligible for production",
+                "x": -156.13803790072652,
+                "y": 280,
+                "h": 90,
+                "w": 440
+            },
+            {
+                "name": "Add Secure Status to Version",
+                "x": -155,
+                "y": 140,
+                "h": 90,
+                "w": 440
+            },
+            {
+                "name": "Add status to make version eligible for production deployment",
+                "x": -97.27607580145303,
+                "y": 420,
+                "h": 90,
+                "w": 700
+            }
+        ],
+        "layoutMode": "auto",
+        "type": "graph",
+        "name": "a9f2c6ab-76e7-415d-b492-d227fe447be5",
+        "children": [
+            {
+                "type": "finish",
+                "name": "5e664473b89a37db54ef7aa75e93ba",
+                "children": []
+            },
+            {
+                "propertyName": "${p:envType}",
+                "type": "switch",
+                "name": "make version eligible for production",
+                "children": []
+            },
+            {
+                "allowFailure": false,
+                "useImpersonation": false,
+                "showHidden": false,
+                "impersonationUseSudo": false,
+                "pluginVersion": 4,
+                "commandName": "Add Secure Status to Version",
+                "pluginName": "FannieMae UCD Common Utilities",
+                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                "properties": {
+                    "status": "DEPLOYED_TO_${p:envType}",
+                    "versionName": "${p:version.name}",
+                    "componentName": "${p:component.name}",
+                    "statusOwner": "${p:system\/STATUS_OWNER_NAME}",
+                    "statusPass": "${p:system\/STATUS_OWNER_PASS}"
+                },
+                "cachedAuthTokenRestriction": {
+                    "name": "System Default",
+                    "description": "Used by default for any plugin steps without a specified token restriction",
+                    "restrictions": [{
+                        "verb": "ALL",
+                        "url": "\/*"
+                    }]
+                },
+                "type": "plugin",
+                "name": "Add Secure Status to Version",
+                "children": []
+            },
+            {
+                "allowFailure": false,
+                "useImpersonation": false,
+                "showHidden": false,
+                "impersonationUseSudo": false,
+                "pluginVersion": 4,
+                "commandName": "Add Secure Status to Version",
+                "pluginName": "FannieMae UCD Common Utilities",
+                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                "properties": {
+                    "status": "DEPLOYED_TO_PRE-PROD",
+                    "versionName": "${p:version.name}",
+                    "componentName": "${p:component.name}",
+                    "statusOwner": "${p:system\/STATUS_OWNER_NAME}",
+                    "statusPass": "${p:system\/STATUS_OWNER_PASS}"
+                },
+                "cachedAuthTokenRestriction": {
+                    "name": "System Default",
+                    "description": "Used by default for any plugin steps without a specified token restriction",
+                    "restrictions": [{
+                        "verb": "ALL",
+                        "url": "\/*"
+                    }]
+                },
+                "type": "plugin",
+                "name": "Add status to make version eligible for production deployment",
+                "children": []
+            }
+        ]
+    },
+    "properties": [
+        {
+            "name": "contextType",
+            "value": "Resource",
+            "description": "",
+            "secure": false
+        },
+        {
+            "name": "defaultResourceId",
+            "value": "16c0adb4-1610-16d8-fcde-cf7b389bd746",
+            "description": "",
+            "secure": false
+        },
+        {
+            "name": "workingDir",
+            "value": "${p:resource\/work.dir}\/${p:process.name}",
+            "description": "",
+            "secure": false
+        }
+    ],
+    "propDefs": [
+        {
+            "name": "component.name",
+            "label": "component.name",
+            "pattern": "",
+            "type": "TEXT",
+            "value": "${p:component.name}",
+            "required": false,
+            "description": "",
+            "placeholder": ""
+        },
+        {
+            "name": "version.name",
+            "label": "version.name",
+            "pattern": "",
+            "type": "TEXT",
+            "value": "${p:version.name}",
+            "required": false,
+            "description": "",
+            "placeholder": ""
+        },
+        {
+            "name": "envType",
+            "label": "envType",
+            "pattern": "",
+            "type": "TEXT",
+            "value": "${p:environment\/envType}",
+            "required": true,
+            "description": "",
+            "placeholder": ""
+        }
+    ],
+    "teamMappings": [
+        {
+            "teamId": "16e18c34-90fa-e779-83d4-fff9d73ce4f6",
+            "teamLabel": "FN3 RAZOR",
+            "resourceTypeId": "20000000000000000000000000000109",
+            "resourceTypeName": "Process"
+        },
+        {
+            "teamId": "16bae78c-1e7f-91cb-75ff-b570e5e763a7",
+            "teamLabel": "EDI RED Team",
+            "resourceTypeId": "20000000000000000000000000000109",
+            "resourceTypeName": "Process"
+        },
+        {
+            "teamId": "16d16d47-1c9f-f92c-288e-bb91c063b220",
+            "teamLabel": "TALEND TEAM",
+            "resourceTypeId": "20000000000000000000000000000109",
+            "resourceTypeName": "Process"
+        },
+        {
+            "teamId": "16b89fb0-b8f8-a6df-ac25-465292a92bc2",
+            "teamLabel": "All Users",
+            "resourceTypeId": "20000000000000000000000000000109",
+            "resourceTypeName": "Process"
+        },
+        {
+            "teamId": "16bae7e4-4098-8a50-3610-91c2e9999bcc",
+            "teamLabel": "s9ussm",
+            "resourceTypeId": "20000000000000000000000000000109",
+            "resourceTypeName": "Process"
+        }
+    ],
+    "linkedProcesses": []
+}
