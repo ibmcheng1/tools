@@ -1,0 +1,216 @@
+{
+    "name": "assumeIamRole-GenProc",
+    "description": "",
+    "rootActivity": {
+        "edges": [
+            {
+                "to": "56d1fa1ac7053d379acc1575d3e4d9",
+                "from": "Assume Role",
+                "type": "SUCCESS",
+                "value": ""
+            },
+            {
+                "to": "Check AWS Account",
+                "type": "ALWAYS",
+                "value": ""
+            },
+            {
+                "to": "Assume Role",
+                "from": "Check AWS Account",
+                "type": "SUCCESS",
+                "value": ""
+            }
+        ],
+        "offsets": [
+            {
+                "name": "56d1fa1ac7053d379acc1575d3e4d9",
+                "x": -5,
+                "y": 550,
+                "h": 90,
+                "w": 130
+            },
+            {
+                "name": "Check AWS Account",
+                "x": -90,
+                "y": 190,
+                "h": 80,
+                "w": 300
+            },
+            {
+                "name": "Assume Role",
+                "x": -30,
+                "y": 370,
+                "h": 80,
+                "w": 180
+            }
+        ],
+        "layoutMode": "manual",
+        "type": "graph",
+        "name": "987e4886-4a7a-4046-9ed0-e1ca40292748",
+        "children": [
+            {
+                "type": "finish",
+                "name": "56d1fa1ac7053d379acc1575d3e4d9",
+                "children": []
+            },
+            {
+                "allowFailure": false,
+                "useImpersonation": false,
+                "showHidden": false,
+                "impersonationUseSudo": false,
+                "pluginVersion": 10,
+                "commandName": "Run Groovy Script",
+                "pluginName": "Groovy",
+                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                "properties": {
+                    "groovyHome": "${GROOVY_HOME}",
+                    "scriptBody": "import groovy.json.*\r\n\r\n\/\/get cicd roles \r\ndef awsAccountsJson = '''${p:system\/AWS_ACCOUNTS}'''\r\ndef awsAccounts = new JsonSlurper().parseText(awsAccountsJson)\r\ndef envTypesList = \"${p:envType}\"\r\ndef accountIdsList = \"${p:accountId}\"\r\ndef rolesList = \"${p:role}\"\r\ndef bypass = \"${p:bypass}\"\r\n\r\nif (bypass == \"true\") {\r\n    println \"bypassing env type check\"\r\n    System.exit(0)\r\n}\r\n\r\ndef envTypes = envTypesList.split(\" \")\r\ndef accountIds = accountIdsList.split(\" \")\r\ndef roles = rolesList.split(\" \")\r\n\r\nif ((envTypes.size() != accountIds.size()) || (envTypes.size() != roles.size())) {\r\n        println \"account ids, env types, and roles all need to have the same amount\"\r\n        System.exit(1)\r\n}\r\n\r\n\/\/validate account id and get cicd roles to use\r\ndef errors = []\r\nfor (def i = 0; i < accountIds.size(); i++) {\r\n    def accountId = accountIds[i]\r\n    def envType = envTypes[i]\r\n    \r\n    if (!awsAccounts.containsKey(envType)) {\r\n        errors << \"${envType} is not a valid environment type\"\r\n        continue\r\n    }\r\n    \r\n    def validAccounts = awsAccounts[envType] \/\/get list of valid accounts for this env type\r\n    \r\n    println \"Validating aws account: \" + accountId\r\n    if (!validAccounts.contains(accountId)) {\r\n        errors << \"The aws account ${accountId} is invalid for ${envType}\"\r\n    }\r\n}\r\n\r\nif (errors) {\r\n    println \"AWS account validation failed with the following errors:\\n\" + errors.join(\"\\n\")\r\n    System.exit(1)\r\n}\r\n\r\nprintln \"Successfully validated account ids for these environments\""
+                },
+                "cachedAuthTokenRestriction": {
+                    "name": "System Default",
+                    "description": "Used by default for any plugin steps without a specified token restriction",
+                    "restrictions": [{
+                        "verb": "ALL",
+                        "url": "\/*"
+                    }]
+                },
+                "type": "plugin",
+                "name": "Check AWS Account",
+                "children": []
+            },
+            {
+                "allowFailure": false,
+                "useImpersonation": false,
+                "showHidden": false,
+                "impersonationUseSudo": false,
+                "pluginVersion": 9,
+                "commandName": "Shell",
+                "pluginName": "Shell",
+                "authTokenRestriction": "20000001-0001-0001-0001-000000000000",
+                "properties": {
+                    "directoryOffset": ".",
+                    "shellInterpreter": "",
+                    "scriptBody": "#Properties\r\nROLES=\"${p:role}\"\r\nACCOUNT_IDS=\"${p:accountId}\"\r\nREGIONS=\"${p?:region}\"\r\nASSET_ID=${p:assetId}\r\n\r\nif [[ $REGIONS == \"\" || $REGIONS == \" \" || -z $REGIONS ]] ; then\r\n    REGIONS=us-east-1\r\nfi\r\n\r\nDEFAULT_REGION=$(echo $REGIONS | cut -d ' ' -f 1)\r\n\r\nexport HOME=${p:home}\r\n#export PATH=\/export\/apps\/citools\/python\/Python-3.5.3\/usr\/local\/bin:$PATH\r\nexport LD_LIBRARY_PATH=\/export\/apps\/citools\/python\/Python-3.7.4:$LD_LIBRARY_PATH\r\nexport PATH=\/export\/apps\/citools\/python\/Python-3.7.4\/bin:$PATH\r\nexport http_proxy=http:\/\/zsproxy.fanniemae.com:9480\r\nexport https_proxy=http:\/\/zsproxy.fanniemae.com:9480\r\nexport no_proxy=sts.fanniemae.com\r\nexport MALLOC_CHECK_=1 \r\n\r\n##############################\r\n#Helper functions\r\n##############################\r\nVALIDATE_ROLE () {\r\n    ROLE=$1\r\n    REGION=$2\r\n    APP_NAME=$(echo $ROLE | cut -d '-' -f 1)\r\n    \r\n    if [[ $APP_NAME != \"SDBX\" ]] ; then #skip for sandbox roles for now\r\n        PARAMETER_NAME=\"\/${APP_NAME}\/common\/AssetID\"\r\n        ROLE_ASSET_ID=$(aws ssm get-parameter --name \"${PARAMETER_NAME}\" --query \"Parameter.Value\" --region $REGION --output text)\r\n        \r\n        echo \"Found asset id: ${ROLE_ASSET_ID}\"\r\n        if [[ $ROLE_ASSET_ID != $ASSET_ID ]] ; then\r\n            echo \"${ROLE} is not associated with the asset id: ${ASSET_ID}\"\r\n            rm -f $HOME\/.aws\/*\r\n            exit 1\r\n        fi\r\n    fi\r\n}\r\n\r\nGET_CICD_DEPLOYER () {\r\n    ROLE=$1\r\n    \r\n    #sandbox roles can be assumed directly by ftxdply so they can be treated as cicd deployer roles\r\n    if [[ $(echo $ROLE | cut -d '-' -f 1) == \"SDBX\" ]] ; then\r\n        echo $ROLE\r\n    else\r\n        VAR=$(echo ${ROLE\/$(echo $ROLE | cut -d '-' -f 1)-\/})\r\n        LIFE_CYCLE=$(echo ${VAR\/-cp-deploy\/})\r\n        \r\n        #for now sdbx-sf should be lab-sf\r\n        if [[ $LIFE_CYCLE == \"sdbx-sf\" ]] ; then\r\n            LIFE_CYCLE=\"lab-sf\"\r\n        fi\r\n        \r\n        CICD_ROLE=$(echo $LIFE_CYCLE | tr '[:lower:]' '[:upper:]')-CICD-DEPLOYER\r\n        echo $CICD_ROLE\r\n    fi\r\n}\r\n\r\nIFS=' ' read -r -a ACCOUNT_IDS <<< \"$ACCOUNT_IDS\"\r\n#IFS=' ' read -r -a ROLES <<< \"$ROLES\"\r\nIFS=' ' read -r -a REGIONS <<< \"$REGIONS\"\r\n\r\n################################\r\n#Loop through all roles that we need to assume\r\n################################\r\nCOUNT=0\r\nfor ROLE in $ROLES ; do\r\n    ACCOUNT_ID=${ACCOUNT_IDS[${COUNT}]}\r\n    REGION=${REGIONS[${COUNT}]}\r\n    PROFILE=${p:request.id}_${COUNT}\r\n    \r\n    if [[ $REGION == \"\" || $REGION == \" \" || -z $REGION ]] ; then\r\n        REGION=us-east-1\r\n    fi\r\n    \r\n    ################################\r\n    #Determine the CICD-DEPLOYER role \r\n    ################################\r\n    CICD_ROLE=$(GET_CICD_DEPLOYER $ROLE)\r\n    \r\n    ################################\r\n    #have ucd user assume the cicd deploy role\r\n    ################################\r\n    echo \"using cicd role: ${CICD_ROLE}\"\r\n    python3.7 \/export\/apps\/citools\/python\/Python-3.7.4\/bin\/federate-UCD.py ftxdply $CICD_ROLE ${p:system\/AWS_PASSWORD}\r\n    export AWS_PROFILE=default\r\n    \r\n    ################################\r\n    #then create a profile for cp deploy role\r\n    ################################\r\n    python3.7 \/export\/apps\/citools\/python\/Python-3.7.4\/bin\/switchRole.py arn:aws:iam::$ACCOUNT_ID:role\/$ROLE $PROFILE $PROFILE\r\n\r\n    if [[ -z $(grep $PROFILE $HOME\/.aws\/credentials) ]]; then\r\n        echo \"failed to create new profile for cp deploy role, so remain with default profile\"\r\n        echo $AWS_PROFILE\r\n        PROFILE=default\r\n        DEFAULT_PROFILE=default\r\n    else\r\n        export AWS_PROFILE=$PROFILE\r\n    fi\r\n    aws sts get-caller-identity\r\n    \r\n    CURRENT_ROLE=$(aws sts get-caller-identity --query Arn | cut -d '\/' -f 2)\r\n    if [[ $CURRENT_ROLE != $ROLE ]] ; then\r\n        echo \"ERROR: Failed to assume the role: ${ROLE}\"\r\n        exit 1\r\n    fi\r\n    \r\n    #validate the role against the asset id \r\n    echo \"Region: ${REGION}\"\r\n    VALIDATE_ROLE $ROLE $REGION\r\n\r\n    echo \"Assumed role: ${ROLE}\"\r\n    \r\n    ################################\r\n    #Add this new profile to the list\r\n    ################################\r\n    PROFILES=\"${PROFILES}switchprofile_${COUNT}=\\\"export AWS_PROFILE=${PROFILE} export AWS_DEFAULT_REGION=${REGION}\\\"\\n\"\r\n    \r\n    COUNT=$((COUNT+1))\r\ndone\r\n\r\nhost=$(hostname)\r\necho \"UCD Agent: ${host}\"\r\n\r\nif [[ -z $DEFAULT_PROFILE ]] ; then\r\n    DEFAULT_PROFILE=${p:request.id}_0\r\nfi\r\n\r\n################################\r\n#create file for component process to source for the profile\r\n################################\r\nFILE=$HOME\/.awsprofile\r\ncat <<EOM >$FILE\r\nexport HOME=${p:home}\r\nexport PATH=\/export\/apps\/citools\/python\/Python-3.7.4\/bin:$PATH\r\nexport LD_LIBRARY_PATH=\/export\/apps\/citools\/python\/Python-3.7.4:$LD_LIBRARY_PATH\r\nexport http_proxy=http:\/\/zsproxy.fanniemae.com:9480\r\nexport https_proxy=http:\/\/zsproxy.fanniemae.com:9480\r\nexport no_proxy=sts.fanniemae.com\r\nexport MALLOC_CHECK_=1\r\nexport AWS_PROFILE=$DEFAULT_PROFILE\r\nexport AWS_DEFAULT_REGION=$DEFAULT_REGION\r\nEOM\r\n\r\n#append aliases for switching profiles \r\necho -ne $PROFILES >> $FILE\r\n\r\n#only ftxdply can source for now\r\nchmod 700 $FILE\r\nchmod -R 700 $HOME\/.aws ",
+                    "runAsDaemon": "false",
+                    "outputFile": ""
+                },
+                "cachedAuthTokenRestriction": {
+                    "name": "System Default",
+                    "description": "Used by default for any plugin steps without a specified token restriction",
+                    "restrictions": [{
+                        "verb": "ALL",
+                        "url": "\/*"
+                    }]
+                },
+                "type": "plugin",
+                "name": "Assume Role",
+                "children": []
+            }
+        ]
+    },
+    "properties": [
+        {
+            "name": "contextType",
+            "value": "Resource",
+            "description": "",
+            "secure": false
+        },
+        {
+            "name": "workingDir",
+            "value": "${p:resource\/work.dir}\/${p:process.name}",
+            "description": "",
+            "secure": false
+        }
+    ],
+    "propDefs": [
+        {
+            "name": "envType",
+            "label": "envType",
+            "pattern": "",
+            "type": "TEXT",
+            "value": "${p:environment\/envType}",
+            "required": true,
+            "description": "",
+            "placeholder": ""
+        },
+        {
+            "name": "accountId",
+            "label": "accountId",
+            "pattern": "",
+            "type": "TEXT",
+            "required": true,
+            "description": "",
+            "placeholder": ""
+        },
+        {
+            "name": "role",
+            "label": "role",
+            "pattern": "",
+            "type": "TEXT",
+            "required": true,
+            "description": "",
+            "placeholder": ""
+        },
+        {
+            "name": "home",
+            "label": "home",
+            "pattern": "",
+            "type": "TEXT",
+            "value": "${p:componentProcess.defaultWorkDir}",
+            "required": true,
+            "description": "",
+            "placeholder": ""
+        },
+        {
+            "name": "assetId",
+            "label": "assetId",
+            "pattern": "",
+            "type": "TEXT",
+            "value": "${p:application\/assetId}",
+            "required": true,
+            "description": "",
+            "placeholder": ""
+        },
+        {
+            "name": "region",
+            "label": "region",
+            "pattern": "",
+            "type": "TEXT",
+            "value": "${p?:environment\/aws.region}",
+            "required": false,
+            "description": "",
+            "placeholder": ""
+        },
+        {
+            "name": "bypass",
+            "label": "bypass",
+            "pattern": "",
+            "type": "CHECKBOX",
+            "value": "false",
+            "required": false,
+            "description": "This bypass envtype check. It will be configured in component templates.",
+            "placeholder": ""
+        }
+    ],
+    "teamMappings": [
+        {
+            "teamId": "170eee48-272c-082b-c6a6-0f52f2afa4c2",
+            "teamLabel": "SFCRM",
+            "resourceTypeId": "20000000000000000000000000000109",
+            "resourceTypeName": "Process"
+        },
+        {
+            "teamId": "1704060a-379c-051d-4ccd-06ae7c10ba5b",
+            "teamLabel": "All Users",
+            "resourceTypeId": "20000000000000000000000000000109",
+            "resourceTypeName": "Process"
+        },
+        {
+            "teamId": "1712c932-cddd-ce2b-be74-2d6bbc98a872",
+            "teamLabel": "VMDSO",
+            "resourceTypeId": "20000000000000000000000000000109",
+            "resourceTypeName": "Process"
+        }
+    ],
+    "linkedProcesses": []
+}
